@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#161019">
+<title>kosmo — cosmetic scanner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#161019;
+  --surface:#211826;
+  --surface2:#2a1f30;
+  --line:rgba(240,229,222,.14);
+  --ink:#f0e5de;
+  --muted:#b3a4ae;
+  --accent:#e4707e;
+  --accent-deep:#24080c;
+  --amber:#e0b15e;
+  --good:#a9c9ad;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Manrope',system-ui,sans-serif;
+  font-size:15px;line-height:1.55;
+  min-height:100dvh;
+}
+.wrap{max-width:460px;margin:0 auto;padding:0 20px 44px}
+a{color:var(--ink)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+[hidden]{display:none!important}
+
+/* ---------- header ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;padding:18px 0 6px}
+.wordmark{font-family:'Instrument Serif',serif;font-size:23px;letter-spacing:.02em;display:flex;align-items:center;gap:9px}
+.tag{font-family:'Spline Sans Mono',monospace;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 8px 2px}
+.iconbtn{background:none;border:1px solid var(--line);border-radius:12px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.iconbtn:hover{color:var(--ink);border-color:var(--muted)}
+.iconbtn svg{width:17px;height:17px}
+
+/* ---------- panels ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px}
+.lbl{font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:9px}
+.keyrow{display:flex;gap:8px}
+.keyrow input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px;color:var(--ink);font-size:14px;font-family:'Spline Sans Mono',monospace;min-width:0}
+.keyrow input::placeholder{color:#6d5f68}
+.hint{font-size:12.5px;color:var(--muted);margin-top:9px}
+.hint.center{text-align:center;margin-top:12px}
+.hint a{color:var(--muted)}
+
+/* ---------- hero ---------- */
+.eyebrow{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--accent);margin:26px 0 12px}
+h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(35px,9.5vw,46px);line-height:1.04;letter-spacing:.005em}
+h1 em{font-style:italic;color:var(--accent)}
+.sub{color:var(--muted);margin-top:13px;max-width:34ch}
+
+/* ---------- viewfinder frame (signature) ---------- */
+.frame{position:relative;margin-top:30px;padding:30px 22px 16px;border-radius:20px;background:linear-gradient(180deg,var(--surface),#1a1320);overflow:hidden}
+.frame.drag{background:linear-gradient(180deg,var(--surface2),#1a1320)}
+.corner{position:absolute;width:22px;height:22px;border-color:var(--accent);border-style:solid;border-width:0;opacity:.95}
+.corner.tl{top:10px;left:10px;border-top-width:2px;border-left-width:2px;border-top-left-radius:8px}
+.corner.tr{top:10px;right:10px;border-top-width:2px;border-right-width:2px;border-top-right-radius:8px}
+.corner.bl{bottom:10px;left:10px;border-bottom-width:2px;border-left-width:2px;border-bottom-left-radius:8px}
+.corner.br{bottom:10px;right:10px;border-bottom-width:2px;border-right-width:2px;border-bottom-right-radius:8px}
+.scanline{position:absolute;left:9%;right:9%;top:14%;height:1px;background:linear-gradient(90deg,transparent,rgba(228,112,126,.75),transparent);animation:scan 3.4s ease-in-out infinite alternate;pointer-events:none}
+@keyframes scan{from{top:14%}to{top:86%}}
+@media (prefers-reduced-motion:reduce){.scanline{animation:none;opacity:.25}.ring,.ring.mini{animation:none}}
+
+/* ---------- buttons ---------- */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px 18px;border-radius:14px;font-size:15.5px;font-weight:600;border:1px solid transparent;letter-spacing:.01em}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.primary{background:var(--accent);color:var(--accent-deep)}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--muted)}
+.btn + .btn{margin-top:10px}
+.btn.small{width:auto;padding:9px 15px;font-size:13.5px;border-radius:11px}
+.btn.small.ghost{border-color:var(--line)}
+.row{display:flex;gap:9px;margin-top:12px}
+
+/* ---------- stage / results ---------- */
+#preview{width:100%;border-radius:18px;border:1px solid var(--line);margin-top:16px;display:block;max-height:340px;object-fit:cover}
+.status{display:flex;align-items:center;gap:13px}
+.ring{width:21px;height:21px;flex:none;border-radius:50%;border:2px solid var(--line);border-top-color:var(--accent);animation:spin .85s linear infinite}
+.ring.mini{width:15px;height:15px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error{border-color:rgba(228,112,126,.45)}
+.error p{color:var(--ink)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:19px;margin-top:16px}
+.card .brand{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.card h2{font-family:'Instrument Serif',serif;font-weight:400;font-size:27px;line-height:1.12}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.chip{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.06em;border:1px solid var(--line);border-radius:999px;padding:5px 11px 4px;color:var(--muted)}
+.chip.hot{color:var(--accent);border-color:rgba(228,112,126,.4)}
+.card .desc{margin-top:13px;color:var(--ink)}
+.sect{font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin:18px 0 9px}
+.ings{display:flex;flex-direction:column;gap:8px}
+.ing{border:1px solid var(--line);border-radius:13px;padding:10px 13px}
+.ing b{font-family:'Spline Sans Mono',monospace;font-weight:500;font-size:13px;letter-spacing:.02em;display:block}
+.ing span{font-size:12.5px;color:var(--muted)}
+.benefits{list-style:none}
+.benefits li{padding-left:22px;position:relative;margin-top:6px}
+.benefits li::before{content:"✓";position:absolute;left:1px;color:var(--good)}
+.kv{margin-top:6px;font-size:14px}
+.kv b{font-weight:600}
+.warn{border:1px solid rgba(224,177,94,.4);border-radius:13px;padding:11px 13px;margin-top:9px;font-size:13.5px;color:var(--amber)}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.links a{font-family:'Spline Sans Mono',monospace;font-size:12px;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--ink)}
+.links a:hover{border-color:var(--accent);color:var(--accent)}
+.sources{list-style:none;margin-top:8px}
+.sources li{margin-top:6px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sources a{color:var(--muted)}
+.sources a:hover{color:var(--accent)}
+.webwait{display:flex;align-items:center;gap:11px;color:var(--muted);font-size:13.5px}
+
+/* ---------- camera ---------- */
+#cameraView{position:fixed;inset:0;background:#000;z-index:50;display:flex;flex-direction:column}
+#video{flex:1;width:100%;object-fit:cover}
+.cambar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:22px 26px calc(22px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.iconbtn.light{border-color:rgba(255,255,255,.35);color:#fff;background:rgba(0,0,0,.25)}
+#captureBtn{width:68px;height:68px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,.35);background-clip:padding-box}
+.spacer{width:38px}
+
+.foot{font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.08em;color:#6d5f68;text-align:center;margin-top:34px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="wordmark">kosmo <span class="tag">prototype</span></div>
+    <button class="iconbtn" id="keyToggle" aria-label="API key settings" title="API key">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+    </button>
+  </header>
+
+  <section class="panel key" id="keyPanel" hidden>
+    <label class="lbl" for="apiKey">Anthropic API key</label>
+    <div class="keyrow">
+      <input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
+      <button class="btn small primary" id="saveKey">Save</button>
+    </div>
+    <p class="hint">Stays in this browser only. Get one at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
+  </section>
+
+  <section id="home">
+    <p class="eyebrow">POINT&nbsp;·&nbsp;SCAN&nbsp;·&nbsp;KNOW</p>
+    <h1>Know what&rsquo;s <em>in</em><br>the bottle.</h1>
+    <p class="sub">Snap any cosmetic — or a screenshot of one — and get what it is, what&rsquo;s in it, and what the web says about it.</p>
+
+    <div class="frame" id="dropzone">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <div class="scanline" aria-hidden="true"></div>
+      <button class="btn primary" id="cameraBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        Take a photo
+      </button>
+      <button class="btn ghost" id="uploadBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.9-3.9a2 2 0 0 0-2.8 0L6 19"/></svg>
+        Upload an image
+      </button>
+      <p class="hint center">or paste a screenshot — Ctrl / Cmd + V</p>
+    </div>
+  </section>
+
+  <section id="stage" hidden>
+    <img id="preview" alt="Scanned product">
+    <div class="panel status" id="statusPanel" hidden>
+      <div class="ring" aria-hidden="true"></div>
+      <p id="statusText">Reading the label…</p>
+    </div>
+    <div class="panel error" id="errorBox" hidden>
+      <p id="errorText"></p>
+      <div class="row">
+        <button class="btn small primary" id="retryBtn">Try again</button>
+        <button class="btn small ghost" id="startOverBtn">Start over</button>
+      </div>
+    </div>
+    <div id="results"></div>
+    <button class="btn ghost" id="resetBtn" hidden style="margin-top:16px">Scan another product</button>
+  </section>
+
+  <footer class="foot">PROTOTYPE · YOUR API KEY NEVER LEAVES THIS DEVICE</footer>
+</div>
+
+<div id="cameraView" hidden>
+  <video id="video" autoplay playsinline muted></video>
+  <div class="cambar">
+    <button class="iconbtn light" id="closeCameraBtn" aria-label="Close camera">✕</button>
+    <button id="captureBtn" aria-label="Capture photo"></button>
+    <span class="spacer"></span>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept="image/*" hidden>
+
+<script>
+const $ = s => document.querySelector(s);
+const els = {
+  keyPanel: $('#keyPanel'), keyToggle: $('#keyToggle'), apiKey: $('#apiKey'), saveKey: $('#saveKey'),
+  home: $('#home'), stage: $('#stage'), preview: $('#preview'),
+  statusPanel: $('#statusPanel'), statusText: $('#statusText'),
+  errorBox: $('#errorBox'), errorText: $('#errorText'),
+  retryBtn: $('#retryBtn'), startOverBtn: $('#startOverBtn'), resetBtn: $('#resetBtn'),
+  results: $('#results'), dropzone: $('#dropzone'),
+  cameraBtn: $('#cameraBtn'), uploadBtn: $('#uploadBtn'), fileInput: $('#fileInput'),
+  cameraView: $('#cameraView'), video: $('#video'), captureBtn: $('#captureBtn'), closeCameraBtn: $('#closeCameraBtn')
+};
+
+const STORE_KEY = 'kosmo_api_key';
+let lastImage = null, statusTimer = null, stream = null;
+
+/* ---------- api key ---------- */
+els.apiKey.value = localStorage.getItem(STORE_KEY) || '';
+if (!els.apiKey.value) els.keyPanel.hidden = false;
+els.keyToggle.addEventListener('click', () => { els.keyPanel.hidden = !els.keyPanel.hidden; });
+els.saveKey.addEventListener('click', () => {
+  localStorage.setItem(STORE_KEY, els.apiKey.value.trim());
+  els.saveKey.textContent = 'Saved';
+  setTimeout(() => { els.saveKey.textContent = 'Save'; els.keyPanel.hidden = true; }, 700);
+});
+
+/* ---------- helpers ---------- */
+function esc(t) {
+  return String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function parseModelJSON(text) {
+  const t = text.replace(/```json/gi, '').replace(/```/g, '');
+  const a = t.indexOf('{'), b = t.lastIndexOf('}');
+  if (a < 0 || b < 0) throw new Error('The model sent an unexpected format. Try again.');
+  return JSON.parse(t.slice(a, b + 1));
+}
+function toJpeg(source) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 1200;
+      const scale = Math.min(1, max / Math.max(img.width, img.height));
+      const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = () => reject(new Error("Couldn't read that image. Try another one."));
+    img.src = typeof source === 'string' ? source : URL.createObjectURL(source);
+  });
+}
+function setStatus(lines) {
+  clearInterval(statusTimer);
+  let i = 0;
+  els.statusText.textContent = lines[0];
+  statusTimer = setInterval(() => { i = (i + 1) % lines.length; els.statusText.textContent = lines[i]; }, 1700);
+}
+function stopStatus() { clearInterval(statusTimer); els.statusPanel.hidden = true; }
+function showError(msg) {
+  stopStatus();
+  els.errorText.textContent = msg;
+  els.errorBox.hidden = false;
+}
+
+/* ---------- claude api ---------- */
+async function callClaude(body) {
+  const key = els.apiKey.value.trim();
+  if (!key) {
+    els.keyPanel.hidden = false;
+    throw new Error('Add your Anthropic API key first — tap the key icon, top right.');
+  }
+  const r = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify(body)
+  });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) {
+    if (r.status === 401) throw new Error('That API key was rejected. Check it and save again.');
+    throw new Error((data && data.error && data.error.message) || 'Request failed (' + r.status + ')');
+  }
+  return data;
+}
+function textOf(data) {
+  return (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
+}
+
+const VISION_PROMPT = `You analyze cosmetic, skincare and beauty products from photos or screenshots. Look at this image and respond with ONLY valid JSON, no markdown fences, in exactly this shape:
+{"identified": true, "product_name": "", "brand": "", "category": "", "description": "", "key_ingredients": [{"name": "", "function": ""}], "benefits": [""], "suitable_for": "", "how_to_use": "", "warnings": [""], "confidence": "high", "search_query": ""}
+Rules: description is 2-3 plain sentences on what it is and what it does. category is short, e.g. "moisturizer", "serum", "foundation". Only list ingredients you can actually read on the label or are certain of for this exact product. confidence is "high", "medium" or "low". search_query is the best query to find this exact product online (brand + product name). If the image is not a cosmetic or beauty product, set identified to false and use description to say what you see instead.`;
+
+/* ---------- main flow ---------- */
+async function analyze(dataUrl) {
+  lastImage = dataUrl;
+  els.home.hidden = true;
+  els.stage.hidden = false;
+  els.errorBox.hidden = true;
+  els.resetBtn.hidden = true;
+  els.results.innerHTML = '';
+  els.preview.src = dataUrl;
+  els.statusPanel.hidden = false;
+  setStatus(['Reading the label…', 'Identifying the product…', 'Checking ingredients…']);
+  window.scrollTo({ top: 0 });
+
+  try {
+    const data = await callClaude({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1500,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: dataUrl.split(',')[1] } },
+          { type: 'text', text: VISION_PROMPT }
+        ]
+      }]
+    });
+    const p = parseModelJSON(textOf(data));
+    stopStatus();
+    renderProduct(p);
+    els.resetBtn.hidden = false;
+    if (p.identified && p.search_query) webLookup(p.search_query);
+  } catch (e) {
+    showError(e.message);
+  }
+}
+
+function renderProduct(p) {
+  if (!p.identified) {
+    els.results.innerHTML =
+      '<div class="card"><p class="brand">NO MATCH</p>' +
+      '<h2>Not a cosmetic, as far as I can tell</h2>' +
+      '<p class="desc">' + esc(p.description || 'Nothing recognizable in this image.') + '</p>' +
+      '<p class="hint" style="margin-top:12px">Get the label or packaging in frame and try again.</p></div>';
+    return;
+  }
+  let html = '<div class="card">';
+  if (p.brand) html += '<p class="brand">' + esc(p.brand) + '</p>';
+  html += '<h2>' + esc(p.product_name || 'Unnamed product') + '</h2>';
+  html += '<div class="chips">';
+  if (p.category) html += '<span class="chip">' + esc(p.category) + '</span>';
+  if (p.confidence) html += '<span class="chip hot">' + esc(p.confidence) + ' confidence</span>';
+  html += '</div>';
+  if (p.description) html += '<p class="desc">' + esc(p.description) + '</p>';
+
+  const ings = (p.key_ingredients || []).filter(i => i && i.name);
+  if (ings.length) {
+    html += '<p class="sect">Key ingredients</p><div class="ings">';
+    ings.forEach(i => {
+      html += '<div class="ing"><b>' + esc(i.name) + '</b>' + (i.function ? '<span>' + esc(i.function) + '</span>' : '') + '</div>';
+    });
+    html += '</div>';
+  }
+  const bens = (p.benefits || []).filter(Boolean);
+  if (bens.length) {
+    html += '<p class="sect">What it does</p><ul class="benefits">';
+    bens.forEach(b => { html += '<li>' + esc(b) + '</li>'; });
+    html += '</ul>';
+  }
+  if (p.suitable_for) html += '<p class="kv" style="margin-top:16px"><b>Suits:</b> ' + esc(p.suitable_for) + '</p>';
+  if (p.how_to_use) html += '<p class="kv"><b>How to use:</b> ' + esc(p.how_to_use) + '</p>';
+  const warns = (p.warnings || []).filter(Boolean);
+  if (warns.length) {
+    html += '<p class="sect">Heads up</p>';
+    warns.forEach(w => { html += '<div class="warn">' + esc(w) + '</div>'; });
+  }
+  html += '</div>';
+  els.results.innerHTML = html;
+}
+
+/* ---------- web lookup ---------- */
+function linksRow(q) {
+  const e = encodeURIComponent(q);
+  return '<div class="links">' +
+    '<a target="_blank" rel="noopener" href="https://www.google.com/search?q=' + e + '">Google ↗</a>' +
+    '<a target="_blank" rel="noopener" href="https://incidecoder.com/search?query=' + e + '">Ingredients ↗</a>' +
+    '<a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=' + e + '%20review">Reviews ↗</a>' +
+    '<a target="_blank" rel="noopener" href="https://www.google.com/search?tbm=shop&q=' + e + '">Shop ↗</a>' +
+    '</div>';
+}
+
+async function webLookup(query) {
+  els.results.insertAdjacentHTML('beforeend',
+    '<div class="card" id="webCard"><p class="sect" style="margin-top:0">From the web</p>' +
+    '<div id="webBody"><div class="webwait"><div class="ring mini" aria-hidden="true"></div>Checking prices and reviews…</div></div></div>');
+  const box = $('#webBody');
+  try {
+    const data = await callClaude({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1200,
+      tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }],
+      messages: [{
+        role: 'user',
+        content: 'Search the web for this cosmetic product: "' + query + '". Find its typical price, how it is reviewed, and where it is sold. Then respond with ONLY valid JSON, no markdown fences: {"summary": "3-4 plain sentences on what reviewers say and anything notable", "price_range": "e.g. $12-18, or: not found", "rating": "e.g. 4.4/5 on Sephora, or: not found", "where_to_buy": ["store names"], "sources": [{"title": "", "url": ""}]}'
+      }]
+    });
+    const w = parseModelJSON(textOf(data));
+    let html = '';
+    if (w.summary) html += '<p class="desc" style="margin-top:0">' + esc(w.summary) + '</p>';
+    if (w.price_range) html += '<p class="kv" style="margin-top:12px"><b>Price:</b> ' + esc(w.price_range) + '</p>';
+    if (w.rating) html += '<p class="kv"><b>Rating:</b> ' + esc(w.rating) + '</p>';
+    const stores = (w.where_to_buy || []).filter(Boolean);
+    if (stores.length) {
+      html += '<div class="chips">';
+      stores.slice(0, 5).forEach(s => { html += '<span class="chip">' + esc(s) + '</span>'; });
+      html += '</div>';
+    }
+    const srcs = (w.sources || []).filter(s => s && s.url);
+    if (srcs.length) {
+      html += '<p class="sect">Sources</p><ul class="sources">';
+      srcs.slice(0, 4).forEach(s => {
+        html += '<li><a target="_blank" rel="noopener" href="' + esc(s.url) + '">' + esc(s.title || s.url) + '</a></li>';
+      });
+      html += '</ul>';
+    }
+    html += linksRow(query);
+    box.innerHTML = html || linksRow(query);
+  } catch (e) {
+    box.innerHTML = '<p class="hint" style="margin-top:0">Live web lookup didn\u2019t work on this key — here are direct searches instead.</p>' + linksRow(query);
+  }
+}
+
+/* ---------- inputs: camera / upload / paste / drop ---------- */
+els.cameraBtn.addEventListener('click', async () => {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    showErrorOnHome('Camera needs a secure (https) page. Use Upload or paste a screenshot instead.');
+    return;
+  }
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    els.video.srcObject = stream;
+    els.cameraView.hidden = false;
+  } catch (err) {
+    showErrorOnHome('Camera access was blocked. Use Upload or paste a screenshot instead.');
+  }
+});
+function stopCamera() {
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  els.cameraView.hidden = true;
+}
+els.closeCameraBtn.addEventListener('click', stopCamera);
+els.captureBtn.addEventListener('click', async () => {
+  const v = els.video;
+  const c = document.createElement('canvas');
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v, 0, 0);
+  const raw = c.toDataURL('image/jpeg', 0.92);
+  stopCamera();
+  analyze(await toJpeg(raw));
+});
+function showErrorOnHome(msg) {
+  els.stage.hidden = false;
+  els.home.hidden = true;
+  els.preview.removeAttribute('src');
+  showError(msg);
+}
+
+els.uploadBtn.addEventListener('click', () => els.fileInput.click());
+els.fileInput.addEventListener('change', async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try { analyze(await toJpeg(f)); } catch (err) { showErrorOnHome(err.message); }
+  e.target.value = '';
+});
+
+window.addEventListener('paste', async e => {
+  const item = [...(e.clipboardData ? e.clipboardData.items : [])].find(i => i.type.startsWith('image/'));
+  if (!item) return;
+  try { analyze(await toJpeg(item.getAsFile())); } catch (err) { showErrorOnHome(err.message); }
+});
+
+['dragover', 'dragenter'].forEach(ev => els.dropzone.addEventListener(ev, e => { e.preventDefault(); els.dropzone.classList.add('drag'); }));
+['dragleave', 'drop'].forEach(ev => els.dropzone.addEventListener(ev, e => { e.preventDefault(); els.dropzone.classList.remove('drag'); }));
+els.dropzone.addEventListener('drop', async e => {
+  const f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (!f || !f.type.startsWith('image/')) return;
+  try { analyze(await toJpeg(f)); } catch (err) { showErrorOnHome(err.message); }
+});
+
+/* ---------- reset / retry ---------- */
+function reset() {
+  stopStatus();
+  els.stage.hidden = true;
+  els.errorBox.hidden = true;
+  els.results.innerHTML = '';
+  els.home.hidden = false;
+  lastImage = null;
+  window.scrollTo({ top: 0 });
+}
+els.resetBtn.addEventListener('click', reset);
+els.startOverBtn.addEventListener('click', reset);
+els.retryBtn.addEventListener('click', () => { lastImage ? analyze(lastImage) : reset(); });
+</script>
+</body>
+</html>
