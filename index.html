@@ -3,502 +3,1119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#161019">
-<title>kosmo — cosmetic scanner</title>
+<meta name="theme-color" content="#F0EEE9">
+<title>LASERSKIN — precision skincare</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#161019;
-  --surface:#211826;
-  --surface2:#2a1f30;
-  --line:rgba(240,229,222,.14);
-  --ink:#f0e5de;
-  --muted:#b3a4ae;
-  --accent:#e4707e;
-  --accent-deep:#24080c;
-  --amber:#e0b15e;
-  --good:#a9c9ad;
+  --bone:#F0EEE9; --parchment:#FCFAF5; --sand:#D6D1C4; --ink:#1F1915;
+  --ivory:#FFFDF6; --nude:#FDCD80; --lime:#CDF548; --ember:#FA4149;
+  --ink48:rgba(31,25,21,.48); --ink60:rgba(31,25,21,.6); --ink16:rgba(31,25,21,.16); --ink10:rgba(31,25,21,.1);
+  --iv48:rgba(255,253,246,.48); --iv60:rgba(255,253,246,.62); --iv14:rgba(255,253,246,.14); --iv08:rgba(255,253,246,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
-body{
-  background:var(--bg);
-  color:var(--ink);
-  font-family:'Manrope',system-ui,sans-serif;
-  font-size:15px;line-height:1.55;
-  min-height:100dvh;
-}
-.wrap{max-width:460px;margin:0 auto;padding:0 20px 44px}
-a{color:var(--ink)}
-button{font-family:inherit;cursor:pointer}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+body{background:var(--bone);color:var(--ink);font-family:'Geist',system-ui,sans-serif;font-size:15px;line-height:1.45;min-height:100dvh}
+button{font-family:inherit;cursor:pointer;color:inherit}
+input{font-family:inherit}
+a{color:inherit}
 [hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:6px}
+img{display:block}
 
-/* ---------- header ---------- */
-.top{display:flex;align-items:center;justify-content:space-between;padding:18px 0 6px}
-.wordmark{font-family:'Instrument Serif',serif;font-size:23px;letter-spacing:.02em;display:flex;align-items:center;gap:9px}
-.tag{font-family:'Spline Sans Mono',monospace;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 8px 2px}
-.iconbtn{background:none;border:1px solid var(--line);border-radius:12px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
-.iconbtn:hover{color:var(--ink);border-color:var(--muted)}
+.app{max-width:430px;margin:0 auto;min-height:100dvh;position:relative}
+.scr{min-height:100dvh;padding:22px 20px 40px;display:none}
+.scr.on{display:block}
+.scr.dark{background:var(--ink);color:var(--ivory)}
+
+/* type */
+.mono{font-family:'Geist Mono',monospace;font-weight:500;font-size:10px;letter-spacing:.8px;text-transform:uppercase}
+.eyebrow{composes:mono}
+.mono.dim{color:var(--ink48)} .dark .mono.dim{color:var(--iv48)}
+.mono.nude{color:#C99749}.dark .mono.nude{color:var(--nude)}
+.h-page{font-weight:500;font-size:24px;letter-spacing:-.5px;margin-top:4px}
+.h-big{font-weight:500;font-size:27px;letter-spacing:-.7px;line-height:1.18}
+.sub{color:var(--ink60);font-size:14px;margin-top:8px}
+.dark .sub{color:var(--iv60)}
+.tiny{font-size:12.5px;color:var(--ink60)}.dark .tiny{color:var(--iv60)}
+
+/* buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;height:54px;border-radius:14px;font-size:15.5px;font-weight:600;border:1px solid transparent;letter-spacing:-.1px}
+.btn.prime{background:var(--ink);color:var(--ivory)}
+.dark .btn.prime{background:var(--lime);color:var(--ink)}
+.btn.lime{background:var(--lime);color:var(--ink)}
+.btn.ghost{background:transparent;border-color:var(--ink16);color:var(--ink)}
+.dark .btn.ghost{border-color:var(--iv14);color:var(--ivory)}
+.btn+.btn{margin-top:10px}
+.btn.sm{width:auto;height:auto;padding:9px 15px;font-size:13.5px;border-radius:11px}
+.linkish{background:none;border:none;font-size:14px;text-decoration:underline;text-underline-offset:3px;font-weight:600}
+
+/* chips & pills */
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:100px;padding:7px 12px;font-family:'Geist Mono',monospace;font-weight:500;font-size:9px;letter-spacing:.8px;text-transform:uppercase;background:rgba(214,209,196,.5);color:rgba(31,25,21,.85);border:1px solid transparent}
+.chip.line{background:transparent;border-color:var(--ink16);color:var(--ink60)}
+.dark .chip{background:var(--iv08);color:var(--iv60)}
+.dark .chip.line{border-color:var(--iv14);background:transparent}
+.chip.caution{background:rgba(250,65,73,.1);border-color:rgba(250,65,73,.45);color:var(--ember)}
+.chip.flag{background:rgba(250,65,73,.08);border-color:rgba(250,65,73,.4);color:var(--ember)}
+.chip.detected{background:rgba(205,245,72,.16);border-color:rgba(205,245,72,.55);color:#5E7211}
+.dark .chip.detected{color:var(--lime)}
+.chip.lime{background:rgba(205,245,72,.2);color:#4C5D0D;border-color:rgba(205,245,72,.6)}
+
+/* cards / rows */
+.card{background:var(--parchment);border:1px solid var(--ink10);border-radius:16px;padding:16px}
+.dark .card{background:var(--iv08);border-color:var(--iv14)}
+.hr{height:1px;background:var(--ink10);border:0;width:100%}
+.dark .hr{background:var(--iv14)}
+.row{display:flex;align-items:center;gap:12px}
+.grow{flex:1;min-width:0}
+.dotline{flex:1;border-bottom:1px dotted var(--ink16);height:1px;min-width:14px}
+.dark .dotline{border-color:var(--iv14)}
+
+/* top bars */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;min-height:34px}
+.backbtn{width:32px;height:32px;border-radius:10px;border:1px solid var(--ink16);background:none;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center}
+.dark .backbtn{border-color:var(--iv14)}
+.iconbtn{width:36px;height:36px;border-radius:11px;border:1px solid var(--ink16);background:none;display:flex;align-items:center;justify-content:center;color:var(--ink60)}
+.dark .iconbtn{border-color:var(--iv14);color:var(--iv60)}
 .iconbtn svg{width:17px;height:17px}
+.wordmark{font-weight:600;font-size:15px;letter-spacing:1.5px;display:flex;align-items:center;gap:8px}
+.wordmark i{width:14px;height:14px;background:var(--lime);border-radius:3px;display:inline-block;position:relative;overflow:hidden}
+.wordmark i::after{content:"";position:absolute;left:-2px;right:-2px;top:6px;height:2px;background:var(--ink);transform:rotate(-18deg)}
 
-/* ---------- panels ---------- */
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px}
-.lbl{font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:9px}
-.keyrow{display:flex;gap:8px}
-.keyrow input{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px;color:var(--ink);font-size:14px;font-family:'Spline Sans Mono',monospace;min-width:0}
-.keyrow input::placeholder{color:#6d5f68}
-.hint{font-size:12.5px;color:var(--muted);margin-top:9px}
-.hint.center{text-align:center;margin-top:12px}
-.hint a{color:var(--muted)}
+/* viewfinder */
+.vf{position:relative;margin-top:18px;border-radius:20px;background:#151009;height:min(58vh,470px);overflow:hidden}
+.vf video,.vf img.freeze{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.vf .corner{position:absolute;width:26px;height:26px;border:0 solid var(--lime);z-index:3}
+.vf .tl{top:12px;left:12px;border-top-width:2.5px;border-left-width:2.5px;border-top-left-radius:9px}
+.vf .tr{top:12px;right:12px;border-top-width:2.5px;border-right-width:2.5px;border-top-right-radius:9px}
+.vf .bl{bottom:12px;left:12px;border-bottom-width:2.5px;border-left-width:2.5px;border-bottom-left-radius:9px}
+.vf .br{bottom:12px;right:12px;border-bottom-width:2.5px;border-right-width:2.5px;border-bottom-right-radius:9px}
+.vf .laser{position:absolute;left:6%;right:6%;top:20%;height:2px;background:linear-gradient(90deg,transparent,var(--lime),transparent);box-shadow:0 0 14px rgba(205,245,72,.8);z-index:3;opacity:.9;animation:sweep 2.6s ease-in-out infinite alternate}
+.vf.idle .laser{animation-duration:4.5s;opacity:.35;box-shadow:none}
+@keyframes sweep{from{top:10%}to{top:88%}}
+@media (prefers-reduced-motion:reduce){.vf .laser{animation:none;top:50%}}
+.vf .vfmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--iv60);z-index:2;text-align:center;padding:0 30px}
+.vf .vfmsg .mono{color:var(--iv48)}
+.analyzebox{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);background:rgba(31,25,21,.82);border:1px solid var(--iv14);border-radius:16px;padding:14px 18px;z-index:4;width:82%;text-align:center;backdrop-filter:blur(6px)}
+.analyzebox p{color:var(--ivory);font-weight:500;font-size:15px}
+.analyzebox .bar{height:3px;background:var(--iv14);border-radius:100px;margin:10px auto 8px;width:180px;overflow:hidden;position:relative}
+.analyzebox .bar::after{content:"";position:absolute;left:-40%;width:40%;top:0;bottom:0;background:var(--lime);border-radius:100px;animation:load 1.2s linear infinite}
+@keyframes load{to{left:100%}}
 
-/* ---------- hero ---------- */
-.eyebrow{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--accent);margin:26px 0 12px}
-h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(35px,9.5vw,46px);line-height:1.04;letter-spacing:.005em}
-h1 em{font-style:italic;color:var(--accent)}
-.sub{color:var(--muted);margin-top:13px;max-width:34ch}
+/* camera controls */
+.camrow{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding:0 12px}
+.camside{width:46px;height:46px;border-radius:50%;border:1px solid var(--ink16);background:var(--parchment);display:flex;align-items:center;justify-content:center;color:var(--ink60)}
+.camside svg{width:20px;height:20px}
+.shutter{width:68px;height:68px;border-radius:50%;background:var(--ink);border:4px solid rgba(31,25,21,.25);background-clip:padding-box;position:relative}
+.shutter::after{content:"";position:absolute;inset:16px;border-radius:50%;border:2.5px solid var(--lime)}
+.scansleft{text-align:center;margin-top:16px}
 
-/* ---------- viewfinder frame (signature) ---------- */
-.frame{position:relative;margin-top:30px;padding:30px 22px 16px;border-radius:20px;background:linear-gradient(180deg,var(--surface),#1a1320);overflow:hidden}
-.frame.drag{background:linear-gradient(180deg,var(--surface2),#1a1320)}
-.corner{position:absolute;width:22px;height:22px;border-color:var(--accent);border-style:solid;border-width:0;opacity:.95}
-.corner.tl{top:10px;left:10px;border-top-width:2px;border-left-width:2px;border-top-left-radius:8px}
-.corner.tr{top:10px;right:10px;border-top-width:2px;border-right-width:2px;border-top-right-radius:8px}
-.corner.bl{bottom:10px;left:10px;border-bottom-width:2px;border-left-width:2px;border-bottom-left-radius:8px}
-.corner.br{bottom:10px;right:10px;border-bottom-width:2px;border-right-width:2px;border-bottom-right-radius:8px}
-.scanline{position:absolute;left:9%;right:9%;top:14%;height:1px;background:linear-gradient(90deg,transparent,rgba(228,112,126,.75),transparent);animation:scan 3.4s ease-in-out infinite alternate;pointer-events:none}
-@keyframes scan{from{top:14%}to{top:86%}}
-@media (prefers-reduced-motion:reduce){.scanline{animation:none;opacity:.25}.ring,.ring.mini{animation:none}}
+/* bottom sheet look (results) */
+.hero{position:relative;height:300px;margin:-22px -20px 0;overflow:hidden;background:var(--ink)}
+.hero img{width:100%;height:100%;object-fit:cover;opacity:.62}
+.hero .over{position:absolute;left:20px;top:20px;right:20px}
+.hero .over .h-page{color:var(--ivory)}
+.sheet{background:var(--parchment);color:var(--ink);border-radius:24px 24px 0 0;margin:-26px -20px 0;padding:10px 22px 26px;position:relative;min-height:50vh}
+.handle{width:44px;height:4.5px;border-radius:100px;background:var(--sand);margin:0 auto 14px}
+.secline{display:flex;align-items:center;gap:10px;margin:6px 0 12px}
+.score{font-weight:500;font-size:34px;letter-spacing:-1px}
+.thumb56{width:56px;height:56px;border-radius:14px;border:1px solid var(--ink10);object-fit:cover}
+.ing{display:flex;align-items:center;gap:12px;margin-top:13px}
+.ing .dot{width:9px;height:9px;border-radius:50%;flex:none}
+.dot.good{background:#9FC531}.dot.neutral{background:var(--nude)}.dot.caution{background:var(--ember)}
+.ing b{font-weight:500;font-size:15px;display:block}
+.ing span{font-size:12.5px;color:var(--ink60)}
+.callout{background:var(--bone);border-radius:16px;padding:14px 16px;display:flex;gap:12px;margin-top:16px}
+.callout .bar{width:3px;border-radius:2px;background:var(--nude);flex:none;align-self:stretch}
+.callout.red .bar{background:var(--ember)}
+.callout p{font-size:13.5px;color:rgba(31,25,21,.82);line-height:1.4}
+.callout .mono{display:block;margin-top:6px;font-size:8.5px;color:rgba(31,25,21,.4)}
+.matchcard{background:var(--ink);color:var(--ivory);border-radius:18px;padding:18px;margin-top:16px}
+.matchcard .big{font-weight:500;font-size:52px;letter-spacing:-2px;line-height:1}
+.matchcard .mbar{height:4px;border-radius:100px;background:var(--iv14);margin-top:14px;overflow:hidden}
+.matchcard .mbar i{display:block;height:100%;background:var(--lime);border-radius:100px}
+.lockband{margin-top:18px;background:var(--ink);color:var(--ivory);border-radius:14px;height:54px;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:600;width:100%;border:none;font-size:15px}
+.lockband svg{width:15px;height:15px}
 
-/* ---------- buttons ---------- */
-.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px 18px;border-radius:14px;font-size:15.5px;font-weight:600;border:1px solid transparent;letter-spacing:.01em}
-.btn svg{width:18px;height:18px;flex:none}
-.btn.primary{background:var(--accent);color:var(--accent-deep)}
-.btn.primary:hover{filter:brightness(1.06)}
-.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
-.btn.ghost:hover{border-color:var(--muted)}
-.btn + .btn{margin-top:10px}
-.btn.small{width:auto;padding:9px 15px;font-size:13.5px;border-radius:11px}
-.btn.small.ghost{border-color:var(--line)}
-.row{display:flex;gap:9px;margin-top:12px}
+/* overlay sheets */
+.osheet{position:fixed;inset:0;z-index:60;display:none;align-items:flex-end;background:rgba(31,25,21,.5)}
+.osheet.on{display:flex}
+.osheet .panel{background:var(--parchment);color:var(--ink);width:100%;max-width:430px;margin:0 auto;border-radius:24px 24px 0 0;padding:10px 22px 30px;max-height:86dvh;overflow:auto}
+.srcrow{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--ink10);align-items:flex-start}
+.srcrow:last-child{border-bottom:0}
+.avvy{width:34px;height:34px;border-radius:10px;background:var(--bone);border:1px solid var(--ink10);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;flex:none}
+.srcrow b{font-size:14.5px;font-weight:600;display:block}
+.srcrow .t{font-size:13px;color:rgba(31,25,21,.75);margin-top:2px}
+.srcrow .s{font-size:12.5px;color:var(--ink60);margin-top:3px;line-height:1.45}
 
-/* ---------- stage / results ---------- */
-#preview{width:100%;border-radius:18px;border:1px solid var(--line);margin-top:16px;display:block;max-height:340px;object-fit:cover}
-.status{display:flex;align-items:center;gap:13px}
-.ring{width:21px;height:21px;flex:none;border-radius:50%;border:2px solid var(--line);border-top-color:var(--accent);animation:spin .85s linear infinite}
-.ring.mini{width:15px;height:15px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.error{border-color:rgba(228,112,126,.45)}
-.error p{color:var(--ink)}
+/* selects (profile) */
+.optrow{border:1px solid var(--iv14);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:10px;margin-top:10px;background:transparent;width:100%;text-align:left;color:var(--ivory)}
+.optrow.on{border-color:var(--lime);background:rgba(205,245,72,.07)}
+.optrow b{font-weight:500;font-size:15px;display:block}
+.optrow span{font-size:12.5px;color:var(--iv60)}
+.radio{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--iv14);flex:none;position:relative}
+.optrow.on .radio{border-color:var(--lime)}
+.optrow.on .radio::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--lime)}
+.chipwrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.selchip{border:1px solid var(--iv14);border-radius:100px;padding:10px 15px;font-size:13.5px;background:transparent;color:var(--ivory);display:flex;align-items:center;gap:7px}
+.selchip.on{border-color:var(--lime);background:rgba(205,245,72,.1)}
+.selchip.on::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime)}
+.tones{display:flex;gap:12px;margin-top:14px}
+.tone{width:44px;height:44px;border-radius:50%;border:2px solid transparent;position:relative;flex:none;cursor:pointer}
+.tone.on{border-color:var(--lime)}
+.tone.on::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+.steps{display:flex;gap:5px}
+.steps i{width:28px;height:3px;border-radius:100px;background:var(--iv14)}
+.steps i.on{background:var(--lime)}
 
-.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:19px;margin-top:16px}
-.card .brand{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
-.card h2{font-family:'Instrument Serif',serif;font-weight:400;font-size:27px;line-height:1.12}
-.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
-.chip{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.06em;border:1px solid var(--line);border-radius:999px;padding:5px 11px 4px;color:var(--muted)}
-.chip.hot{color:var(--accent);border-color:rgba(228,112,126,.4)}
-.card .desc{margin-top:13px;color:var(--ink)}
-.sect{font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin:18px 0 9px}
-.ings{display:flex;flex-direction:column;gap:8px}
-.ing{border:1px solid var(--line);border-radius:13px;padding:10px 13px}
-.ing b{font-family:'Spline Sans Mono',monospace;font-weight:500;font-size:13px;letter-spacing:.02em;display:block}
-.ing span{font-size:12.5px;color:var(--muted)}
-.benefits{list-style:none}
-.benefits li{padding-left:22px;position:relative;margin-top:6px}
-.benefits li::before{content:"✓";position:absolute;left:1px;color:var(--good)}
-.kv{margin-top:6px;font-size:14px}
-.kv b{font-weight:600}
-.warn{border:1px solid rgba(224,177,94,.4);border-radius:13px;padding:11px 13px;margin-top:9px;font-size:13.5px;color:var(--amber)}
-.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.links a{font-family:'Spline Sans Mono',monospace;font-size:12px;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:7px 13px;color:var(--ink)}
-.links a:hover{border-color:var(--accent);color:var(--accent)}
-.sources{list-style:none;margin-top:8px}
-.sources li{margin-top:6px;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sources a{color:var(--muted)}
-.sources a:hover{color:var(--accent)}
-.webwait{display:flex;align-items:center;gap:11px;color:var(--muted);font-size:13.5px}
+/* history */
+.hrow{display:flex;align-items:center;gap:13px;border:1px solid var(--iv14);border-radius:16px;padding:13px 14px;margin-top:11px;background:transparent;width:100%;text-align:left;color:var(--ivory)}
+.hrow.sel{border-color:var(--lime);background:rgba(205,245,72,.06)}
+.hrow img{width:48px;height:48px;border-radius:12px;object-fit:cover;background:var(--iv08)}
+.hrow b{font-size:14.5px;font-weight:500;display:block}
+.badge{border:1px solid var(--iv14);border-radius:9px;padding:5px 9px;font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;color:var(--lime);flex:none}
+.tabs{display:flex;gap:4px;border:1px solid var(--iv14);border-radius:12px;padding:4px;margin-top:16px;overflow:auto}
+.tabs button{border:none;background:none;color:var(--iv60);border-radius:9px;padding:7px 13px;font-size:13.5px;white-space:nowrap}
+.tabs button.on{background:var(--iv08);color:var(--ivory)}
 
-/* ---------- camera ---------- */
-#cameraView{position:fixed;inset:0;background:#000;z-index:50;display:flex;flex-direction:column}
-#video{flex:1;width:100%;object-fit:cover}
-.cambar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:22px 26px calc(22px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.55))}
-.iconbtn.light{border-color:rgba(255,255,255,.35);color:#fff;background:rgba(0,0,0,.25)}
-#captureBtn{width:68px;height:68px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,.35);background-clip:padding-box}
-.spacer{width:38px}
+/* compare */
+.cmpgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:16px}
+.cmpcard{border:1px solid var(--iv14);border-radius:16px;padding:14px;position:relative}
+.cmpcard img{width:100%;height:86px;object-fit:cover;border-radius:11px;background:var(--iv08)}
+.cmpcard .pct{font-weight:500;font-size:30px;letter-spacing:-1px;margin-top:8px}
+.cmprow{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:11px 0;border-bottom:1px solid var(--iv14);font-size:14px}
+.cmprow .lbl{grid-column:1/3;font-family:'Geist Mono',monospace;font-size:9.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--iv48);margin-bottom:-4px}
 
-.foot{font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.08em;color:#6d5f68;text-align:center;margin-top:34px}
+/* paywall / gate */
+.plan{border:1.5px solid var(--ink16);border-radius:16px;padding:14px;position:relative;flex:1;background:var(--parchment);text-align:left}
+.plan.on{border-color:var(--ink)}
+.plan .price{font-weight:500;font-size:26px;letter-spacing:-1px;margin-top:6px}
+.saveflag{position:absolute;top:-10px;right:12px;background:var(--lime);border-radius:100px;padding:4px 9px;font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.8px;font-weight:500;color:var(--ink)}
+.ring{width:96px;height:96px;border-radius:50%;border:2.5px solid var(--ink);margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.check{width:19px;height:19px;border-radius:50%;background:rgba(205,245,72,.35);color:#4C5D0D;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:none}
+.dark .check{background:rgba(205,245,72,.2);color:var(--lime)}
+
+/* toast + misc */
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--ivory);border-radius:100px;padding:11px 19px;font-size:13.5px;opacity:0;transition:.25s;z-index:99;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.field{width:100%;background:var(--bone);border:1px solid var(--ink16);border-radius:12px;padding:12px 14px;font-size:13.5px;font-family:'Geist Mono',monospace;color:var(--ink)}
+.lbl-s{display:block;margin:16px 0 8px}
+.spin{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink16);border-top-color:var(--ink);animation:rot .8s linear infinite;flex:none}
+.dark .spin{border-color:var(--iv14);border-top-color:var(--lime)}
+@keyframes rot{to{transform:rotate(360deg)}}
+.onbslide{display:none}
+.onbslide.on{display:block}
+.illo{height:300px;border-radius:20px;background:radial-gradient(120% 100% at 50% 0%,rgba(205,245,72,.14),transparent 60%),var(--iv08);border:1px solid var(--iv14);margin-top:14px;display:flex;align-items:center;justify-content:center;font-size:56px}
+.footmono{text-align:center;margin-top:22px}
 </style>
 </head>
 <body>
-<div class="wrap">
-
-  <header class="top">
-    <div class="wordmark">kosmo <span class="tag">prototype</span></div>
-    <button class="iconbtn" id="keyToggle" aria-label="API key settings" title="API key">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
-    </button>
-  </header>
-
-  <section class="panel key" id="keyPanel" hidden>
-    <label class="lbl" for="apiKey">Anthropic API key</label>
-    <div class="keyrow">
-      <input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
-      <button class="btn small primary" id="saveKey">Save</button>
-    </div>
-    <p class="hint">Stays in this browser only. Get one at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
-  </section>
-
-  <section id="home">
-    <p class="eyebrow">POINT&nbsp;·&nbsp;SCAN&nbsp;·&nbsp;KNOW</p>
-    <h1>Know what&rsquo;s <em>in</em><br>the bottle.</h1>
-    <p class="sub">Snap any cosmetic — or a screenshot of one — and get what it is, what&rsquo;s in it, and what the web says about it.</p>
-
-    <div class="frame" id="dropzone">
-      <span class="corner tl"></span><span class="corner tr"></span>
-      <span class="corner bl"></span><span class="corner br"></span>
-      <div class="scanline" aria-hidden="true"></div>
-      <button class="btn primary" id="cameraBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
-        Take a photo
-      </button>
-      <button class="btn ghost" id="uploadBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.9-3.9a2 2 0 0 0-2.8 0L6 19"/></svg>
-        Upload an image
-      </button>
-      <p class="hint center">or paste a screenshot — Ctrl / Cmd + V</p>
-    </div>
-  </section>
-
-  <section id="stage" hidden>
-    <img id="preview" alt="Scanned product">
-    <div class="panel status" id="statusPanel" hidden>
-      <div class="ring" aria-hidden="true"></div>
-      <p id="statusText">Reading the label…</p>
-    </div>
-    <div class="panel error" id="errorBox" hidden>
-      <p id="errorText"></p>
-      <div class="row">
-        <button class="btn small primary" id="retryBtn">Try again</button>
-        <button class="btn small ghost" id="startOverBtn">Start over</button>
-      </div>
-    </div>
-    <div id="results"></div>
-    <button class="btn ghost" id="resetBtn" hidden style="margin-top:16px">Scan another product</button>
-  </section>
-
-  <footer class="foot">PROTOTYPE · YOUR API KEY NEVER LEAVES THIS DEVICE</footer>
-</div>
-
-<div id="cameraView" hidden>
-  <video id="video" autoplay playsinline muted></video>
-  <div class="cambar">
-    <button class="iconbtn light" id="closeCameraBtn" aria-label="Close camera">✕</button>
-    <button id="captureBtn" aria-label="Capture photo"></button>
-    <span class="spacer"></span>
+<div class="app" id="app">
+<!-- ============ ONBOARDING ============ -->
+<section class="scr dark" id="scrOnboard">
+  <div class="topbar">
+    <div class="wordmark"><i></i>LASERSKIN<span class="mono dim" style="margin-left:2px">™</span></div>
+    <button class="linkish" id="onbSkip" style="font-weight:400;text-decoration:none;color:var(--iv60)">Skip</button>
   </div>
-</div>
+  <div id="onbSlides"></div>
+  <div class="row" style="margin-top:26px"><div class="steps" id="onbSteps"></div></div>
+  <button class="btn prime" id="onbNext" style="margin-top:22px">Continue</button>
+</section>
+
+<!-- ============ SCAN (HOME) ============ -->
+<section class="scr" id="scrScan">
+  <div class="topbar">
+    <div>
+      <p class="mono nude" id="scanEyebrow">LASERSKIN · LIVE SCAN</p>
+      <h1 class="h-page">Scan a product</h1>
+    </div>
+    <div class="row" style="gap:8px">
+      <button class="iconbtn" id="histBtn" aria-label="Your scans" title="Your scans">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg>
+      </button>
+      <button class="iconbtn" id="setBtn" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.09a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>
+      </button>
+    </div>
+  </div>
+  <p class="sub" style="margin-top:0">Point your camera at a skincare product</p>
+
+  <div class="vf idle" id="vf">
+    <video id="camVideo" autoplay playsinline muted hidden></video>
+    <img class="freeze" id="freezeImg" alt="" hidden>
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="laser" id="laser"></div>
+    <div class="vfmsg" id="vfMsg">
+      <p class="mono">CAMERA OFF</p>
+      <p style="max-width:230px">Enable your camera, upload a photo, or paste a screenshot</p>
+      <button class="btn lime sm" id="enableCamBtn" style="width:auto">Enable camera</button>
+    </div>
+    <div class="analyzebox" id="analyzeBox" hidden>
+      <p id="analyzeTitle">Analyzing product…</p>
+      <div class="bar"></div>
+      <p class="mono" style="color:var(--iv48)" id="analyzeSub">READING LABEL · IDENTIFYING · SCORING</p>
+    </div>
+  </div>
+
+  <div class="camrow">
+    <button class="camside" id="uploadBtn" aria-label="Upload from gallery" title="Upload image">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.9-3.9a2 2 0 0 0-2.8 0L6 19"/></svg>
+    </button>
+    <button class="shutter" id="shutterBtn" aria-label="Capture"></button>
+    <button class="camside" id="pasteHintBtn" aria-label="Paste a screenshot" title="Paste (Ctrl/Cmd+V)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="2.5" width="8" height="4" rx="1.5"/><path d="M16 4.5h2.5a2 2 0 0 1 2 2V19a2.5 2.5 0 0 1-2.5 2.5H6A2.5 2.5 0 0 1 3.5 19V6.5a2 2 0 0 1 2-2H8"/></svg>
+    </button>
+  </div>
+  <p class="mono dim scansleft" id="scansLeft">3 FREE SCANS LEFT TODAY</p>
+</section>
+
+<!-- ============ RESULT ============ -->
+<section class="scr dark" id="scrResult" style="padding:0">
+  <div class="hero">
+    <img id="resHeroImg" alt="Scanned product">
+    <div class="over">
+      <div class="row" style="justify-content:space-between">
+        <p class="mono" style="color:var(--nude)" id="resEyebrow">LASERSKIN · MATCH FOUND</p>
+        <button class="backbtn" id="resClose" style="border-color:rgba(255,253,246,.3);color:var(--ivory)">×</button>
+      </div>
+      <h1 class="h-page" style="color:var(--ivory)">Scan a product</h1>
+    </div>
+  </div>
+  <div class="sheet" id="resSheet"></div>
+</section>
+
+<!-- ============ NO MATCH ============ -->
+<section class="scr" id="scrNoMatch">
+  <p class="mono nude">LASERSKIN · NO MATCH</p>
+  <h1 class="h-page">Scan a product</h1>
+  <div style="max-width:310px;margin:80px auto 0;text-align:center">
+    <div class="ring" style="border-color:var(--ink16);width:76px;height:76px;font-size:30px">?</div>
+    <p class="mono dim" style="margin-top:22px">NO MATCH FOUND</p>
+    <h2 class="h-big" style="margin-top:8px">We couldn't identify this product</h2>
+    <p class="sub" id="noMatchWhy">We don't have enough data on this product yet. Help us improve by submitting it.</p>
+    <button class="btn prime" id="submitProductBtn" style="margin-top:26px">Submit product</button>
+    <button class="btn ghost" id="noMatchRetry">Try again</button>
+  </div>
+</section>
+
+<!-- ============ FREE LIMIT GATE ============ -->
+<section class="scr" id="scrLimit">
+  <p class="mono nude">LASERSKIN · DAILY LIMIT</p>
+  <h1 class="h-page">Scan a product</h1>
+  <div style="max-width:320px;margin:56px auto 0;text-align:center">
+    <div class="ring"><b style="font-size:26px;letter-spacing:-1px" id="limitCount">3/3</b><span class="mono dim">TODAY</span></div>
+    <h2 class="h-big" style="margin-top:22px">You've used today's free scans</h2>
+    <p class="sub">Free includes 3 scans a day. Go Premium for unlimited scans, results matched to your skin, and history.</p>
+    <p class="chip line" style="margin-top:18px" id="limitReset">FREE SCANS RESET AT MIDNIGHT</p>
+    <button class="btn prime" id="limitUpgrade" style="margin-top:30px">Try 7 days for $0.99</button>
+    <p class="mono dim" style="margin-top:12px">THEN $29.99/YEAR · CANCEL ANYTIME</p>
+    <button class="linkish" id="limitLater" style="margin-top:20px;font-weight:400">Maybe later</button>
+  </div>
+</section>
+
+<!-- ============ PAYWALL ============ -->
+<section class="scr" id="scrPaywall">
+  <div class="topbar">
+    <button class="backbtn" id="pwClose">×</button>
+    <button class="linkish" style="font-weight:400;text-decoration:none;color:var(--ink60)" id="pwRestore">Restore</button>
+  </div>
+  <div class="wordmark" style="margin-top:8px"><i></i>LASERSKIN PREMIUM</div>
+  <h2 class="h-big" style="margin-top:14px">Unlock your full skin profile</h2>
+  <p class="sub">Personalized scans, ingredient deep-dives, and tracking — built around your skin.</p>
+  <div style="margin-top:20px">
+    <p class="row" style="gap:11px;margin-top:12px"><span class="check">✓</span>Unlimited product scans</p>
+    <p class="row" style="gap:11px;margin-top:12px"><span class="check">✓</span>Personalized skin-type matching &amp; scores</p>
+    <p class="row" style="gap:11px;margin-top:12px"><span class="check">✓</span>Ingredient deep-dives &amp; routine builder</p>
+    <p class="row" style="gap:11px;margin-top:12px"><span class="check">✓</span>Save, track &amp; compare your scan history</p>
+  </div>
+  <hr class="hr" style="margin:20px 0 14px">
+  <p class="tiny">Where-to-buy stays free for everyone. Dermatologist reviews are pay-as-you-go — no subscription needed.</p>
+  <div class="row" style="gap:12px;margin-top:24px;align-items:stretch">
+    <button class="plan on" id="planYear">
+      <span class="saveflag">SAVE 50%</span>
+      <span class="mono dim">ANNUAL</span>
+      <p class="price">$29.99</p>
+      <span class="mono dim" style="font-size:8.5px">≈ $2.50/MO · BILLED YEARLY</span>
+    </button>
+    <button class="plan" id="planMonth">
+      <span class="mono dim">MONTHLY</span>
+      <p class="price">$4.99</p>
+      <span class="mono dim" style="font-size:8.5px">PER MONTH</span>
+    </button>
+  </div>
+  <button class="btn prime" id="pwCTA" style="margin-top:22px">Try 7 days for $0.99</button>
+  <p class="mono dim" style="text-align:center;margin-top:11px">THEN $29.99/YEAR · CANCEL ANYTIME · DEMO — NO REAL CHARGE</p>
+  <p class="mono dim footmono" style="font-size:8.5px;max-width:320px;margin-left:auto;margin-right:auto">PRICES IN USD. ALSO £3.99 / €4.99 (UK &amp; EU) AND NGN 1,500 (NIGERIA), LOCALIZED TO YOUR REGION.</p>
+</section>
+
+<!-- ============ WELCOME (PREMIUM) ============ -->
+<section class="scr dark" id="scrWelcome">
+  <div class="illo" style="height:330px;margin-top:34px">✦</div>
+  <h2 class="h-big" style="margin-top:26px">You're in. Welcome.</h2>
+  <p class="sub">Let's tune LASERSKIN to your skin so every scan is matched to you. It takes about a minute.</p>
+  <div class="chipwrap" style="margin-top:16px">
+    <span class="chip line">PERSONALIZED SCORES</span><span class="chip line">ROUTINE BUILDER</span><span class="chip line">HISTORY &amp; COMPARE</span>
+  </div>
+  <button class="btn prime" id="wlSetup" style="margin-top:34px">Set up my skin profile</button>
+  <button class="btn ghost" id="wlLater">I'll do it later</button>
+</section>
+
+<!-- ============ FACE SCAN ============ -->
+<section class="scr" id="scrFace">
+  <p class="mono nude">STEP 1 · SCAN YOUR SKIN</p>
+  <h1 class="h-page">Skin scan</h1>
+  <div class="vf idle" id="faceVf" style="height:min(56vh,450px)">
+    <video id="faceVideo" autoplay playsinline muted hidden></video>
+    <img class="freeze" id="faceFreeze" alt="" hidden>
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="laser"></div>
+    <div class="vfmsg" id="faceMsg">
+      <p class="mono">FRONT CAMERA</p>
+      <p style="max-width:230px">Center your face in even light, or upload a selfie</p>
+      <button class="btn lime sm" id="faceEnableBtn" style="width:auto">Enable camera</button>
+    </div>
+    <div class="analyzebox" id="faceAnalyzeBox" hidden>
+      <p>Analyzing your skin…</p>
+      <div class="bar"></div>
+      <p class="mono" style="color:var(--iv48)">READING TYPE · TEXTURE · TONE · CONCERNS</p>
+    </div>
+  </div>
+  <p class="tiny" style="text-align:center;margin-top:14px">Used only to estimate your skin type — not a diagnosis. The photo isn't stored.</p>
+  <div class="camrow" style="max-width:260px;margin-left:auto;margin-right:auto">
+    <button class="camside" id="faceUploadBtn" aria-label="Upload selfie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.9-3.9a2 2 0 0 0-2.8 0L6 19"/></svg></button>
+    <button class="shutter" id="faceShutter" aria-label="Capture"></button>
+    <span style="width:46px"></span>
+  </div>
+  <p style="text-align:center;margin-top:14px"><button class="linkish" id="faceManual">Answer manually instead</button></p>
+</section>
+
+<!-- ============ FACE DETECTED ============ -->
+<section class="scr dark" id="scrFaceDone">
+  <div class="topbar"><button class="backbtn" id="fdBack">‹</button><b style="font-size:16px">Skin scan</b><span style="width:32px"></span></div>
+  <div class="row" style="gap:13px;margin-top:14px">
+    <span class="check" style="width:40px;height:40px;font-size:17px">✓</span>
+    <div><b style="font-size:20px;font-weight:500">Scan complete</b><p class="mono dim" id="fdMeta">READ 12 SKIN MARKERS · JUST NOW</p></div>
+  </div>
+  <p style="font-weight:500;font-size:17px;margin-top:26px">Here's what we found</p>
+  <p class="tiny">Estimated from your photo. You'll confirm and adjust each one in the next steps.</p>
+  <div class="cmpgrid" id="fdCards"></div>
+  <p class="tiny" style="margin-top:16px">These are AI estimates from one photo — confirming the questions makes your matches more accurate.</p>
+  <button class="btn prime" id="fdFinish" style="margin-top:26px">Finish setup</button>
+  <button class="btn ghost" id="fdRetake">Retake scan</button>
+</section>
+
+<!-- ============ PROFILE STEP 1: TYPE ============ -->
+<section class="scr dark" id="scrType">
+  <div class="topbar"><button class="backbtn" data-back="face">‹</button><div class="steps"><i class="on"></i><i></i><i></i></div></div>
+  <p class="mono nude" id="typeEyebrow">STEP 1 OF 3</p>
+  <h2 class="h-big" style="margin-top:6px">What's your skin type?</h2>
+  <p class="sub" id="typeSub">Pick the closest match — you can change this anytime.</p>
+  <div id="typeOpts" style="margin-top:16px"></div>
+  <button class="btn prime" id="typeNext" style="margin-top:26px">Continue</button>
+</section>
+
+<!-- ============ PROFILE STEP 2: CONCERNS ============ -->
+<section class="scr dark" id="scrConcerns">
+  <div class="topbar"><button class="backbtn" data-back="type">‹</button><div class="steps"><i class="on"></i><i class="on"></i><i></i></div></div>
+  <p class="mono nude" id="conEyebrow">STEP 2 OF 3</p>
+  <h2 class="h-big" style="margin-top:6px">What are you working on?</h2>
+  <p class="sub" id="conSub">Add or remove anything that doesn't fit.</p>
+  <div class="chipwrap" id="conChips"></div>
+  <p class="mono dim" style="margin-top:18px" id="conCount">0 SELECTED</p>
+  <button class="btn prime" id="conNext" style="margin-top:22px">Continue</button>
+</section>
+
+<!-- ============ PROFILE STEP 3: SENSITIVITIES + TONE ============ -->
+<section class="scr dark" id="scrSens">
+  <div class="topbar"><button class="backbtn" data-back="concerns">‹</button><div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+  <p class="mono nude" id="sensEyebrow">STEP 3 OF 3</p>
+  <h2 class="h-big" style="margin-top:6px">Sensitivities &amp; skin tone</h2>
+  <p class="sub">Adjust anything that's off.</p>
+  <p class="mono dim lbl-s">AVOID FOR ME</p>
+  <div class="chipwrap" id="avoidChips" style="margin-top:4px"></div>
+  <p class="mono dim lbl-s">YOUR SKIN TONE</p>
+  <div class="tones" id="toneRow"></div>
+  <p class="tiny" style="margin-top:14px">Helps us weight ingredients that matter more for melanin-rich skin — like flagging actives that can worsen hyperpigmentation.</p>
+  <button class="btn prime" id="sensDone" style="margin-top:26px">Continue</button>
+</section>
+
+<!-- ============ HISTORY ============ -->
+<section class="scr dark" id="scrHistory">
+  <div class="topbar">
+    <div><h1 class="h-big" style="font-size:30px">Your scans</h1><p class="mono dim" id="histCount">0 PRODUCTS SAVED</p></div>
+    <button class="chip line" id="cmpToggle" style="cursor:pointer">COMPARE</button>
+  </div>
+  <div class="tabs" id="histTabs">
+    <button class="on" data-f="all">All</button><button data-f="best">Best matches</button><button data-f="saved">Saved</button><button data-f="flagged">Flagged</button>
+  </div>
+  <div id="histList"></div>
+  <p class="mono dim" style="text-align:center;margin-top:22px" id="histHint">TAP A SCAN TO REOPEN IT</p>
+  <button class="btn ghost" id="histBack" style="margin-top:20px">Back to scanning</button>
+</section>
+
+<!-- ============ COMPARE ============ -->
+<section class="scr dark" id="scrCompare">
+  <div class="topbar"><button class="backbtn" id="cmpBack">‹</button><b style="font-size:16px">Compare</b><span style="width:32px"></span></div>
+  <div id="cmpBody"></div>
+</section>
+
+<!-- ============ OVERLAY SHEETS ============ -->
+<div class="osheet" id="shSources"><div class="panel">
+  <div class="handle"></div>
+  <div class="row"><p class="mono dim" id="srcHead">SOURCES</p><span class="dotline"></span><b style="font-size:14px" id="srcProd"></b></div>
+  <div id="srcList"></div>
+  <p class="mono dim" style="text-align:center;margin-top:16px;font-size:8.5px">PUBLIC PRODUCT PAGES &amp; DATABASES, SUMMARIZED BY AI</p>
+</div></div>
+
+<div class="osheet" id="shBuy"><div class="panel">
+  <div class="handle"></div>
+  <div class="row"><p class="mono dim">WHERE TO BUY</p><span class="dotline"></span><b style="font-size:14px" id="buyProd"></b></div>
+  <div id="buyList"></div>
+  <p class="mono dim" style="margin-top:16px;font-size:8.5px">LASERSKIN MAY EARN A COMMISSION. THIS NEVER AFFECTS SAFETY SCORES.</p>
+</div></div>
+
+<div class="osheet" id="shDerm"><div class="panel">
+  <div class="handle"></div>
+  <p class="mono dim">BOOK A DERMATOLOGIST</p>
+  <p class="tiny" style="margin-top:8px">Your LASERSKIN score is an AI estimate, not a diagnosis. A licensed dermatologist gives a professional opinion.</p>
+  <div class="card" style="margin-top:14px">
+    <div class="row"><div class="avvy" style="border-radius:50%;width:48px;height:48px">A</div>
+      <div class="grow"><b style="font-size:15px">Dr. Amara Okafor</b><p class="tiny">Consultant Dermatologist · MBBS, FWACP</p><p class="mono dim" style="font-size:8.5px;margin-top:3px">★ 4.9 · 320 REVIEWS · ENGLISH, YORUBA</p></div>
+    </div>
+    <hr class="hr" style="margin:12px 0"><p class="tiny">Reviews your scan, routine &amp; photos within 24 hours</p>
+  </div>
+  <p class="mono dim lbl-s">WHAT'S INCLUDED</p>
+  <p class="row" style="gap:10px;margin-top:8px;font-size:13.5px"><span class="check">✓</span>Written assessment of your scanned product</p>
+  <p class="row" style="gap:10px;margin-top:8px;font-size:13.5px"><span class="check">✓</span>Personalized routine &amp; ingredient guidance</p>
+  <p class="row" style="gap:10px;margin-top:8px;font-size:13.5px"><span class="check">✓</span>One follow-up question included</p>
+  <button class="btn prime" id="dermBook" style="margin-top:20px">Book review · $30</button>
+  <p class="mono dim" style="text-align:center;margin-top:10px;font-size:8.5px">ONE-OFF PAYMENT · NO SUBSCRIPTION · DEMO ONLY</p>
+</div></div>
+
+<div class="osheet" id="shAccuracy"><div class="panel">
+  <div class="handle"></div>
+  <h2 class="h-big" style="font-size:24px">How accurate is this?</h2>
+  <p class="tiny" style="margin-top:8px">LASERSKIN uses AI to read products and summarize ingredient data. It's a helpful guide — here's how to use it well.</p>
+  <div class="row" style="align-items:flex-start;margin-top:18px"><b class="mono nude">01</b><div class="grow"><b style="font-size:14.5px">Built on live product data</b><p class="tiny">We match each scan against public product pages and ingredient databases, then summarize with AI.</p></div></div>
+  <div class="row" style="align-items:flex-start;margin-top:16px"><b class="mono nude">02</b><div class="grow"><b style="font-size:14.5px">An estimate, not a diagnosis</b><p class="tiny">Scores are guidance and can be wrong — especially for new, refilled or look-alike products.</p></div></div>
+  <div class="row" style="align-items:flex-start;margin-top:16px"><b class="mono nude">03</b><div class="grow"><b style="font-size:14.5px">Patch-test new actives</b><p class="tiny">Add one active at a time and patch-test first — particularly retinoids, acids and strong exfoliants.</p></div></div>
+  <div class="row" style="align-items:flex-start;margin-top:16px"><b class="mono nude">04</b><div class="grow"><b style="font-size:14.5px">For real concerns, see a pro</b><p class="tiny">Persistent or severe skin issues should be reviewed by a dermatologist.</p></div></div>
+  <button class="btn prime" id="accGotIt" style="margin-top:24px">Got it</button>
+</div></div>
+
+<div class="osheet" id="shSettings"><div class="panel">
+  <div class="handle"></div>
+  <p class="mono dim">SETTINGS</p>
+  <label class="mono dim lbl-s" for="keyInput">ANTHROPIC API KEY (THIS DEVICE ONLY)</label>
+  <input class="field" id="keyInput" type="password" placeholder="sk-ant-..." autocomplete="off" spellcheck="false">
+  <label class="mono dim lbl-s" for="proxyInput">PROXY URL (OPTIONAL — LETS VISITORS SCAN WITHOUT A KEY)</label>
+  <input class="field" id="proxyInput" type="text" placeholder="https://your-worker.workers.dev" autocomplete="off" spellcheck="false">
+  <p class="tiny" style="margin-top:10px">With a proxy set, this app sends requests to your Cloudflare Worker and the API key stays on the server. See worker.js in the repo.</p>
+  <div class="row" style="margin-top:18px;gap:10px">
+    <button class="btn prime sm" id="saveSettings" style="flex:1;height:46px">Save</button>
+    <button class="btn ghost sm" id="resetDemo" style="flex:1;height:46px">Reset demo data</button>
+  </div>
+</div></div>
 
 <input type="file" id="fileInput" accept="image/*" hidden>
+<input type="file" id="faceFileInput" accept="image/*" hidden>
+<div id="toast"></div>
 
+</div>
 <script>
-const $ = s => document.querySelector(s);
-const els = {
-  keyPanel: $('#keyPanel'), keyToggle: $('#keyToggle'), apiKey: $('#apiKey'), saveKey: $('#saveKey'),
-  home: $('#home'), stage: $('#stage'), preview: $('#preview'),
-  statusPanel: $('#statusPanel'), statusText: $('#statusText'),
-  errorBox: $('#errorBox'), errorText: $('#errorText'),
-  retryBtn: $('#retryBtn'), startOverBtn: $('#startOverBtn'), resetBtn: $('#resetBtn'),
-  results: $('#results'), dropzone: $('#dropzone'),
-  cameraBtn: $('#cameraBtn'), uploadBtn: $('#uploadBtn'), fileInput: $('#fileInput'),
-  cameraView: $('#cameraView'), video: $('#video'), captureBtn: $('#captureBtn'), closeCameraBtn: $('#closeCameraBtn')
+/* ================= CONFIG & STATE ================= */
+const CONFIG = {
+  PROXY_URL: '',                 // paste a Cloudflare Worker URL here to bake it in (see worker.js)
+  MODEL: 'claude-sonnet-4-6',
+  FREE_SCANS_PER_DAY: 3,
+  HISTORY_MAX: 40
 };
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const store = {
+  get k(){ return localStorage.getItem('ls_key') || ''; },
+  set k(v){ localStorage.setItem('ls_key', v); },
+  get proxy(){ return localStorage.getItem('ls_proxy') || CONFIG.PROXY_URL; },
+  set proxy(v){ localStorage.setItem('ls_proxy', v); },
+  get premium(){ return localStorage.getItem('ls_premium') === '1'; },
+  set premium(v){ localStorage.setItem('ls_premium', v ? '1' : '0'); },
+  get onboarded(){ return localStorage.getItem('ls_onboarded') === '1'; },
+  set onboarded(v){ localStorage.setItem('ls_onboarded', v ? '1' : '0'); },
+  get profile(){ try { return JSON.parse(localStorage.getItem('ls_profile')) || null; } catch(e){ return null; } },
+  set profile(v){ localStorage.setItem('ls_profile', JSON.stringify(v)); },
+  get records(){ try { return JSON.parse(localStorage.getItem('ls_records')) || []; } catch(e){ return []; } },
+  set records(v){ localStorage.setItem('ls_records', JSON.stringify(v)); }
+};
+function todayKey(){ return 'ls_scans_' + new Date().toISOString().slice(0,10); }
+function scansUsed(){ return parseInt(localStorage.getItem(todayKey()) || '0', 10); }
+function bumpScans(){ localStorage.setItem(todayKey(), String(scansUsed() + 1)); }
+function scansLeft(){ return Math.max(0, CONFIG.FREE_SCANS_PER_DAY - scansUsed()); }
 
-const STORE_KEY = 'kosmo_api_key';
-let lastImage = null, statusTimer = null, stream = null;
+let camStream = null, faceStream = null, pendingImage = null, currentRecord = null;
+let draftProfile = {}, cmpMode = false, cmpPick = [];
 
-/* ---------- api key ---------- */
-els.apiKey.value = localStorage.getItem(STORE_KEY) || '';
-if (!els.apiKey.value) els.keyPanel.hidden = false;
-els.keyToggle.addEventListener('click', () => { els.keyPanel.hidden = !els.keyPanel.hidden; });
-els.saveKey.addEventListener('click', () => {
-  localStorage.setItem(STORE_KEY, els.apiKey.value.trim());
-  els.saveKey.textContent = 'Saved';
-  setTimeout(() => { els.saveKey.textContent = 'Save'; els.keyPanel.hidden = true; }, 700);
-});
+/* one-time key hand-off via #k= fragment (never stored in the repo) */
+(function(){
+  const m = location.hash.match(/[#&]k=([^&]+)/);
+  if (m) {
+    store.k = decodeURIComponent(m[1]);
+    history.replaceState(null, '', location.pathname + location.search);
+    setTimeout(() => toast('API key saved on this device'), 400);
+  }
+})();
 
-/* ---------- helpers ---------- */
-function esc(t) {
-  return String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+/* ================= UTILS ================= */
+function esc(t){ return String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('on'), 2600); }
+function show(id){
+  $$('.scr').forEach(s => s.classList.remove('on'));
+  $('#scr' + id).classList.add('on');
+  window.scrollTo({ top: 0 });
+  if (id !== 'Scan') stopCam(); 
+  if (id !== 'Face') stopFace();
 }
-function parseModelJSON(text) {
-  const t = text.replace(/```json/gi, '').replace(/```/g, '');
-  const a = t.indexOf('{'), b = t.lastIndexOf('}');
-  if (a < 0 || b < 0) throw new Error('The model sent an unexpected format. Try again.');
-  return JSON.parse(t.slice(a, b + 1));
-}
-function toJpeg(source) {
+function openSheet(id){ $('#' + id).classList.add('on'); }
+function closeSheets(){ $$('.osheet').forEach(s => s.classList.remove('on')); }
+$$('.osheet').forEach(s => s.addEventListener('click', e => { if (e.target === s) closeSheets(); }));
+
+function toJpeg(source, max){
+  max = max || 1200;
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      const max = 1200;
       const scale = Math.min(1, max / Math.max(img.width, img.height));
-      const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
       const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
       resolve(c.toDataURL('image/jpeg', 0.85));
     };
-    img.onerror = () => reject(new Error("Couldn't read that image. Try another one."));
+    img.onerror = () => reject(new Error("Couldn't read that image."));
     img.src = typeof source === 'string' ? source : URL.createObjectURL(source);
   });
 }
-function setStatus(lines) {
-  clearInterval(statusTimer);
-  let i = 0;
-  els.statusText.textContent = lines[0];
-  statusTimer = setInterval(() => { i = (i + 1) % lines.length; els.statusText.textContent = lines[i]; }, 1700);
+async function hashOf(dataUrl){
+  const bytes = new TextEncoder().encode(dataUrl.split(',')[1]);
+  const buf = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,'0')).join('');
 }
-function stopStatus() { clearInterval(statusTimer); els.statusPanel.hidden = true; }
-function showError(msg) {
-  stopStatus();
-  els.errorText.textContent = msg;
-  els.errorBox.hidden = false;
+function parseModelJSON(text){
+  const t = text.replace(/```json/gi,'').replace(/```/g,'');
+  const a = t.indexOf('{'), b = t.lastIndexOf('}');
+  if (a < 0 || b < 0) throw new Error('Unexpected model response. Try again.');
+  return JSON.parse(t.slice(a, b + 1));
 }
+function textOf(data){ return (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n'); }
 
-/* ---------- claude api ---------- */
-async function callClaude(body) {
-  const key = els.apiKey.value.trim();
-  if (!key) {
-    els.keyPanel.hidden = false;
-    throw new Error('Add your Anthropic API key first — tap the key icon, top right.');
+/* ================= CLAUDE API (proxy or direct) ================= */
+async function callClaude(body){
+  body.model = CONFIG.MODEL;
+  const proxy = (store.proxy || '').trim();
+  let url, headers = { 'content-type': 'application/json' };
+  if (proxy) { url = proxy; }
+  else {
+    const key = store.k.trim();
+    if (!key) { openSheet('shSettings'); throw new Error('Add an API key (or a proxy URL) in Settings first.'); }
+    url = 'https://api.anthropic.com/v1/messages';
+    headers['x-api-key'] = key;
+    headers['anthropic-version'] = '2023-06-01';
+    headers['anthropic-dangerous-direct-browser-access'] = 'true';
   }
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify(body)
-  });
+  const r = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
   const data = await r.json().catch(() => ({}));
   if (!r.ok) {
-    if (r.status === 401) throw new Error('That API key was rejected. Check it and save again.');
-    throw new Error((data && data.error && data.error.message) || 'Request failed (' + r.status + ')');
+    if (r.status === 401) throw new Error('API key rejected — check Settings.');
+    throw new Error((data && data.error && data.error.message) || ('Request failed (' + r.status + ')'));
   }
   return data;
 }
-function textOf(data) {
-  return (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
+
+/* ================= PROMPTS ================= */
+function productPrompt(){
+  const p = store.profile;
+  let profileBlock = '';
+  if (p) {
+    profileBlock = '\nUSER SKIN PROFILE — personalize for this person: skin type ' + p.type +
+      '; concerns: ' + (p.concerns.join(', ') || 'none') +
+      '; avoids: ' + (p.avoid.join(', ') || 'none') +
+      '; skin tone: ' + p.toneLabel + ' (melanin-rich: weight hyperpigmentation and irritation risks accordingly).' +
+      '\nAlso include: "match_percent" (0-100 integer, fit for THIS profile), "match_line" (like "Suits your combination skin · 1 ingredient flagged for you"), "flagged_for_you" (array of ingredient names from key_ingredients that clash with the avoids/sensitivities; empty if none).';
+  }
+  return 'You analyze cosmetic, skincare and beauty products from photos or screenshots for the LASERSKIN app. Look at this image and respond with ONLY valid JSON, no markdown fences:\n' +
+  '{"identified": true, "brand": "", "product_name": "", "subtitle": "", "overall_score": 8.6, "score_chip": "", "key_ingredients": [{"name": "", "function": "", "level": "good"}], "verdict": "", "confidence": "high", "search_query": ""' + (p ? ', "match_percent": 0, "match_line": "", "flagged_for_you": []' : '') + '}\n' +
+  'Rules: subtitle is short, like "Night Treatment · 30 ml" (category · size if visible). overall_score is 0-10 with one decimal, a fair general quality/safety score. score_chip is a short caps-style phrase like "GOOD FOR ALL SKIN TYPES" or "BEST FOR OILY SKIN". key_ingredients: 3-5 entries, function under 6 words, level is "good", "neutral" or "caution" (caution = common irritants like fragrance, drying alcohols, essential oils). Only list ingredients readable on the label or certain for this exact product. verdict is one sentence like "Effective for anti-aging — but contains fragrance, which may irritate sensitive skin." search_query = brand + product name. If the image is not a cosmetic/beauty product, return {"identified": false, "seen": "<what you see instead, one sentence>"}.' + profileBlock;
+}
+const WEB_PROMPT_TMPL = q => 'Search the web for this cosmetic product: "' + q + '". Find how it is reviewed, typical prices, and where it is sold online. Respond with ONLY valid JSON, no markdown fences:\n{"summary": "2-3 plain sentences on what reviewers say", "rating": "e.g. 4.4/5 · 1,284 reviews (Sephora), or: not found", "sellers": [{"store": "", "note": "", "price": ""}], "sources": [{"site": "", "title": "", "snippet": "", "url": ""}]}\nsellers: up to 5 real online stores found. sources: up to 7 — the pages you actually used (retailer pages, ingredient databases like INCIDecoder, review sites, official brand page). snippet under 20 words, in your own words.';
+const FACE_PROMPT = 'This is a selfie provided by the user for cosmetic skin-typing in a skincare app. Estimate cosmetic skin characteristics only — this is NOT a medical assessment. Respond with ONLY valid JSON, no markdown fences:\n{"ok": true, "skin_type": "Combination", "type_confidence": "high", "hydration": "Medium", "tone_index": 4, "tone_label": "Deep", "concerns": ["Redness"], "markers": 12}\nRules: skin_type is one of Oily, Dry, Combination, Normal, Sensitive. hydration is Low, Medium or High. tone_index is 1 (lightest) to 6 (deepest) with a matching short tone_label (e.g. Fair, Light, Medium, Tan, Deep, Rich). concerns: pick 0-4 visible cosmetic concerns ONLY from: Acne & breakouts, Redness, Aging & fine lines, Dark spots, Dryness, Uneven texture, Large pores, Dullness, Hyperpigmentation. markers = number of skin markers you assessed (integer). If no clear face is visible, return {"ok": false}.';
+
+/* ================= CACHE / RECORDS ================= */
+function productKey(p){ return ((p.brand || '') + '|' + (p.product_name || '')).toLowerCase().trim(); }
+async function thumbOf(dataUrl){ return toJpeg(dataUrl, 140); }
+function findByHash(h){ return store.records.find(r => r.hash === h); }
+function findByKey(k){ return store.records.find(r => r.key === k); }
+function saveRecord(rec){
+  let recs = store.records.filter(r => r.id !== rec.id);
+  recs.unshift(rec);
+  if (recs.length > CONFIG.HISTORY_MAX) recs = recs.slice(0, CONFIG.HISTORY_MAX);
+  while (recs.length) {
+    try { store.records = recs; return; }
+    catch(e) { recs = recs.slice(0, Math.max(1, Math.floor(recs.length / 2))); } /* storage full: prune oldest */
+  }
+}
+function patchRecord(id, patch){
+  const recs = store.records;
+  const r = recs.find(x => x.id === id);
+  if (r) { Object.assign(r, patch); store.records = recs; }
+  if (currentRecord && currentRecord.id === id) Object.assign(currentRecord, patch);
 }
 
-const VISION_PROMPT = `You analyze cosmetic, skincare and beauty products from photos or screenshots. Look at this image and respond with ONLY valid JSON, no markdown fences, in exactly this shape:
-{"identified": true, "product_name": "", "brand": "", "category": "", "description": "", "key_ingredients": [{"name": "", "function": ""}], "benefits": [""], "suitable_for": "", "how_to_use": "", "warnings": [""], "confidence": "high", "search_query": ""}
-Rules: description is 2-3 plain sentences on what it is and what it does. category is short, e.g. "moisturizer", "serum", "foundation". Only list ingredients you can actually read on the label or are certain of for this exact product. confidence is "high", "medium" or "low". search_query is the best query to find this exact product online (brand + product name). If the image is not a cosmetic or beauty product, set identified to false and use description to say what you see instead.`;
+/* ================= SCAN FLOW ================= */
+async function startCam(){
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    $('#camVideo').srcObject = camStream;
+    $('#camVideo').hidden = false;
+    $('#vfMsg').hidden = true;
+    $('#freezeImg').hidden = true;
+  } catch(e) { toast('Camera blocked — upload or paste instead'); }
+}
+function stopCam(){ if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; } const v = $('#camVideo'); if (v) { v.hidden = true; } }
+function grabFrame(videoEl){
+  const c = document.createElement('canvas');
+  c.width = videoEl.videoWidth; c.height = videoEl.videoHeight;
+  c.getContext('2d').drawImage(videoEl, 0, 0);
+  return c.toDataURL('image/jpeg', 0.92);
+}
 
-/* ---------- main flow ---------- */
-async function analyze(dataUrl) {
-  lastImage = dataUrl;
-  els.home.hidden = true;
-  els.stage.hidden = false;
-  els.errorBox.hidden = true;
-  els.resetBtn.hidden = true;
-  els.results.innerHTML = '';
-  els.preview.src = dataUrl;
-  els.statusPanel.hidden = false;
-  setStatus(['Reading the label…', 'Identifying the product…', 'Checking ingredients…']);
-  window.scrollTo({ top: 0 });
+async function beginScan(rawDataUrl){
+  const dataUrl = await toJpeg(rawDataUrl);
+  const h = await hashOf(dataUrl);
+
+  /* cache layer 1: exact same image seen before — instant, no API, no scan used */
+  const cached = findByHash(h);
+  if (cached) {
+    patchRecord(cached.id, { ts: Date.now() });
+    openResult(cached, { fromCache: true });
+    return;
+  }
+  /* free limit check (cached retrievals never count) */
+  if (!store.premium && scansLeft() <= 0) { renderLimit(); show('Limit'); return; }
+
+  pendingImage = { dataUrl, hash: h };
+  $('#freezeImg').src = dataUrl; $('#freezeImg').hidden = false;
+  $('#camVideo').hidden = true; $('#vfMsg').hidden = true;
+  $('#vf').classList.remove('idle');
+  $('#analyzeBox').hidden = false;
+  stopCam();
 
   try {
     const data = await callClaude({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1500,
-      messages: [{
-        role: 'user',
-        content: [
-          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: dataUrl.split(',')[1] } },
-          { type: 'text', text: VISION_PROMPT }
-        ]
-      }]
+      max_tokens: 1400,
+      messages: [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: dataUrl.split(',')[1] } },
+        { type: 'text', text: productPrompt() }
+      ]}]
     });
     const p = parseModelJSON(textOf(data));
-    stopStatus();
-    renderProduct(p);
-    els.resetBtn.hidden = false;
-    if (p.identified && p.search_query) webLookup(p.search_query);
-  } catch (e) {
-    showError(e.message);
+    $('#analyzeBox').hidden = true; $('#vf').classList.add('idle');
+
+    if (!p.identified) {
+      bumpScans(); refreshScanUI();
+      $('#noMatchWhy').textContent = p.seen ? ('We saw: ' + p.seen + ' Get the label in frame and try again — or submit it to help us improve.') : 'We don\u2019t have enough data on this product yet. Help us improve by submitting it.';
+      show('NoMatch');
+      return;
+    }
+    bumpScans(); refreshScanUI();
+
+    /* cache layer 2: same product scanned before via a different photo — reuse its web data */
+    const kk = productKey(p);
+    const twin = kk !== '|' ? findByKey(kk) : null;
+    const rec = {
+      id: 'r' + Date.now(), ts: Date.now(), hash: h, key: kk,
+      thumb: await thumbOf(dataUrl), img: await toJpeg(dataUrl, 520),
+      product: p, web: twin ? twin.web : null,
+      saved: false, routine: false
+    };
+    saveRecord(rec);
+    openResult(rec, { fromCache: false, reusedWeb: !!twin });
+    if (!twin && p.search_query) fetchWeb(rec);
+  } catch(e) {
+    $('#analyzeBox').hidden = true; $('#vf').classList.add('idle');
+    $('#vfMsg').hidden = false;
+    toast(e.message);
   }
 }
 
-function renderProduct(p) {
-  if (!p.identified) {
-    els.results.innerHTML =
-      '<div class="card"><p class="brand">NO MATCH</p>' +
-      '<h2>Not a cosmetic, as far as I can tell</h2>' +
-      '<p class="desc">' + esc(p.description || 'Nothing recognizable in this image.') + '</p>' +
-      '<p class="hint" style="margin-top:12px">Get the label or packaging in frame and try again.</p></div>';
-    return;
-  }
-  let html = '<div class="card">';
-  if (p.brand) html += '<p class="brand">' + esc(p.brand) + '</p>';
-  html += '<h2>' + esc(p.product_name || 'Unnamed product') + '</h2>';
-  html += '<div class="chips">';
-  if (p.category) html += '<span class="chip">' + esc(p.category) + '</span>';
-  if (p.confidence) html += '<span class="chip hot">' + esc(p.confidence) + ' confidence</span>';
-  html += '</div>';
-  if (p.description) html += '<p class="desc">' + esc(p.description) + '</p>';
-
-  const ings = (p.key_ingredients || []).filter(i => i && i.name);
-  if (ings.length) {
-    html += '<p class="sect">Key ingredients</p><div class="ings">';
-    ings.forEach(i => {
-      html += '<div class="ing"><b>' + esc(i.name) + '</b>' + (i.function ? '<span>' + esc(i.function) + '</span>' : '') + '</div>';
-    });
-    html += '</div>';
-  }
-  const bens = (p.benefits || []).filter(Boolean);
-  if (bens.length) {
-    html += '<p class="sect">What it does</p><ul class="benefits">';
-    bens.forEach(b => { html += '<li>' + esc(b) + '</li>'; });
-    html += '</ul>';
-  }
-  if (p.suitable_for) html += '<p class="kv" style="margin-top:16px"><b>Suits:</b> ' + esc(p.suitable_for) + '</p>';
-  if (p.how_to_use) html += '<p class="kv"><b>How to use:</b> ' + esc(p.how_to_use) + '</p>';
-  const warns = (p.warnings || []).filter(Boolean);
-  if (warns.length) {
-    html += '<p class="sect">Heads up</p>';
-    warns.forEach(w => { html += '<div class="warn">' + esc(w) + '</div>'; });
-  }
-  html += '</div>';
-  els.results.innerHTML = html;
-}
-
-/* ---------- web lookup ---------- */
-function linksRow(q) {
-  const e = encodeURIComponent(q);
-  return '<div class="links">' +
-    '<a target="_blank" rel="noopener" href="https://www.google.com/search?q=' + e + '">Google ↗</a>' +
-    '<a target="_blank" rel="noopener" href="https://incidecoder.com/search?query=' + e + '">Ingredients ↗</a>' +
-    '<a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=' + e + '%20review">Reviews ↗</a>' +
-    '<a target="_blank" rel="noopener" href="https://www.google.com/search?tbm=shop&q=' + e + '">Shop ↗</a>' +
-    '</div>';
-}
-
-async function webLookup(query) {
-  els.results.insertAdjacentHTML('beforeend',
-    '<div class="card" id="webCard"><p class="sect" style="margin-top:0">From the web</p>' +
-    '<div id="webBody"><div class="webwait"><div class="ring mini" aria-hidden="true"></div>Checking prices and reviews…</div></div></div>');
-  const box = $('#webBody');
+async function fetchWeb(rec){
   try {
     const data = await callClaude({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1200,
+      max_tokens: 1400,
       tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }],
-      messages: [{
-        role: 'user',
-        content: 'Search the web for this cosmetic product: "' + query + '". Find its typical price, how it is reviewed, and where it is sold. Then respond with ONLY valid JSON, no markdown fences: {"summary": "3-4 plain sentences on what reviewers say and anything notable", "price_range": "e.g. $12-18, or: not found", "rating": "e.g. 4.4/5 on Sephora, or: not found", "where_to_buy": ["store names"], "sources": [{"title": "", "url": ""}]}'
-      }]
+      messages: [{ role: 'user', content: WEB_PROMPT_TMPL(rec.product.search_query) }]
     });
     const w = parseModelJSON(textOf(data));
-    let html = '';
-    if (w.summary) html += '<p class="desc" style="margin-top:0">' + esc(w.summary) + '</p>';
-    if (w.price_range) html += '<p class="kv" style="margin-top:12px"><b>Price:</b> ' + esc(w.price_range) + '</p>';
-    if (w.rating) html += '<p class="kv"><b>Rating:</b> ' + esc(w.rating) + '</p>';
-    const stores = (w.where_to_buy || []).filter(Boolean);
-    if (stores.length) {
-      html += '<div class="chips">';
-      stores.slice(0, 5).forEach(s => { html += '<span class="chip">' + esc(s) + '</span>'; });
-      html += '</div>';
+    patchRecord(rec.id, { web: w });
+    if (currentRecord && currentRecord.id === rec.id && $('#scrResult').classList.contains('on')) renderResultSheet(currentRecord, {});
+  } catch(e) {
+    patchRecord(rec.id, { web: { failed: true } });
+    if (currentRecord && currentRecord.id === rec.id && $('#scrResult').classList.contains('on')) renderResultSheet(currentRecord, {});
+  }
+}
+
+/* ================= RESULT RENDER ================= */
+function openResult(rec, opts){
+  currentRecord = rec;
+  $('#resHeroImg').src = rec.img || rec.thumb;
+  $('#resEyebrow').textContent = opts.fromCache ? 'LASERSKIN · FROM YOUR SHELF' : 'LASERSKIN · MATCH FOUND';
+  renderResultSheet(rec, opts);
+  show('Result');
+}
+function srcAvatar(site){ return esc((site || '?').trim().charAt(0).toUpperCase()); }
+function renderResultSheet(rec, opts){
+  const p = rec.product, w = rec.web, prof = store.profile;
+  let h = '<div class="handle"></div>';
+  const nSrc = w && w.sources ? w.sources.length : 0;
+  h += '<div class="row"><p class="mono dim">PRODUCT ANALYSIS</p><span class="dotline"></span>' +
+       (nSrc ? '<button class="chip line" style="cursor:pointer" onclick="openSources()">' + nSrc + ' SOURCES</button>' : (w && w.failed ? '' : '<span class="chip line"><span class="spin" style="width:11px;height:11px;border-width:1.5px"></span>SOURCING</span>')) + '</div>';
+  h += '<div class="row" style="margin-top:12px"><img class="thumb56" src="' + rec.thumb + '" alt=""><div class="grow"><b style="font-size:17px;letter-spacing:-.2px;font-weight:600">' + esc(p.product_name) + '</b><p class="tiny">' + esc([p.brand, p.subtitle].filter(Boolean).join(' · ')) + '</p></div></div>';
+  h += '<div class="row" style="margin-top:14px"><span class="score">' + esc(String(p.overall_score)) + '</span><span class="tiny">/ 10 overall</span><span class="dotline"></span>' + (p.score_chip ? '<span class="chip">' + esc(p.score_chip) + '</span>' : '') + '</div>';
+
+  if (prof && p.match_percent != null) {
+    const fl = (p.flagged_for_you || []);
+    h += '<div class="matchcard"><p class="mono" style="color:var(--iv48)">FOR YOUR SKIN · ' + esc((prof.type || '').toUpperCase()) + (prof.avoid && prof.avoid.length ? ' · SENSITIVE' : '') + '</p>' +
+      '<div class="row" style="margin-top:8px"><span class="big">' + esc(String(p.match_percent)) + '%</span><span class="tiny" style="color:var(--iv60)">match</span></div>' +
+      '<div class="mbar"><i style="width:' + Math.max(2, Math.min(100, p.match_percent)) + '%"></i></div>' +
+      (p.match_line ? '<p class="tiny" style="color:var(--iv60);margin-top:12px">' + esc(p.match_line) + '</p>' : '') + '</div>';
+  }
+
+  h += '<hr class="hr" style="margin:16px 0 4px"><p class="mono dim" style="margin-top:10px">KEY INGREDIENTS' + (prof ? ' FOR YOU' : '') + '</p>';
+  const flagged = new Set(((p.flagged_for_you) || []).map(x => (x || '').toLowerCase()));
+  (p.key_ingredients || []).forEach(i => {
+    const isFlag = flagged.has((i.name || '').toLowerCase());
+    h += '<div class="ing"><span class="dot ' + (i.level === 'caution' ? 'caution' : i.level === 'good' ? 'good' : 'neutral') + '"></span><div class="grow"><b>' + esc(i.name) + '</b><span>' + esc(i.function || '') + '</span></div>' +
+      (isFlag ? '<span class="chip flag">FLAGGED FOR YOU</span>' : (i.level === 'caution' ? '<span class="chip caution">CAUTION</span>' : '')) + '</div>';
+  });
+
+  if (p.verdict) h += '<div class="callout"><span class="bar"></span><div><p>' + esc(p.verdict) + '</p><span class="mono">AI ESTIMATE' + (prof ? ' BASED ON YOUR PROFILE' : '') + ' — NOT MEDICAL ADVICE</span></div></div>';
+  const fl2 = (p.flagged_for_you || []);
+  if (prof && fl2.length) h += '<div class="callout red"><span class="bar"></span><div><p>Contains ' + esc(fl2.join(', ')) + ' — you flagged ' + (fl2.length > 1 ? 'these' : 'this') + ' as a sensitivity.</p></div></div>';
+
+  /* web block */
+  if (w && !w.failed) {
+    if (w.rating || w.summary) {
+      h += '<p class="mono dim" style="margin-top:18px">FROM THE WEB</p>';
+      if (w.summary) h += '<p class="tiny" style="margin-top:8px;color:rgba(31,25,21,.75)">' + esc(w.summary) + '</p>';
+      if (w.rating) h += '<p style="font-size:14px;margin-top:8px"><b style="font-weight:600">Rating:</b> ' + esc(w.rating) + '</p>';
     }
-    const srcs = (w.sources || []).filter(s => s && s.url);
-    if (srcs.length) {
-      html += '<p class="sect">Sources</p><ul class="sources">';
-      srcs.slice(0, 4).forEach(s => {
-        html += '<li><a target="_blank" rel="noopener" href="' + esc(s.url) + '">' + esc(s.title || s.url) + '</a></li>';
+    if (w.sources && w.sources.length) {
+      h += '<p class="mono dim" style="margin-top:16px">TOP SOURCES</p>';
+      w.sources.slice(0, 2).forEach(s => {
+        h += '<a class="srcrow" style="text-decoration:none" target="_blank" rel="noopener" href="' + esc(s.url || '#') + '"><span class="avvy">' + srcAvatar(s.site) + '</span><div class="grow"><b>' + esc(s.site) + '</b><p class="t">' + esc(s.title || '') + '</p></div></a>';
       });
-      html += '</ul>';
+      h += '<button class="linkish" onclick="openSources()" style="margin-top:8px">See all ' + w.sources.length + ' sources →</button>';
     }
-    html += linksRow(query);
-    box.innerHTML = html || linksRow(query);
-  } catch (e) {
-    box.innerHTML = '<p class="hint" style="margin-top:0">Live web lookup didn\u2019t work on this key — here are direct searches instead.</p>' + linksRow(query);
+  } else if (w && w.failed) {
+    h += '<p class="tiny" style="margin-top:16px">Live web lookup didn\u2019t work — quick searches: ' + quickLinks(p.search_query) + '</p>';
   }
+
+  if (!store.premium) h += '<button class="lockband" onclick="show(\'Paywall\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>Unlock full analysis for your skin</button>';
+
+  h += '<div class="row" style="gap:10px;margin-top:18px"><button class="btn ghost" style="border-color:var(--ink16);color:var(--ink)" onclick="openBuy()">Where to buy</button><button class="btn ghost" style="border-color:var(--ink16);color:var(--ink)" onclick="openSheet(\'shDerm\')"><span style="text-align:center">Dermatologist<br><span class="mono" style="font-size:8.5px;color:var(--ink48)">FROM $25</span></span></button></div>';
+  h += '<div class="row" style="margin-top:18px"><button class="linkish" onclick="openSheet(\'shAccuracy\')" style="font-weight:400;font-size:13px;color:var(--ink60)">How accurate is this?</button><span class="dotline"></span><button class="linkish" id="saveGal" onclick="toggleSave()" style="font-weight:400">' + (rec.saved ? 'Saved ✓' : 'Save to gallery') + '</button></div>';
+  $('#resSheet').innerHTML = h;
+}
+function quickLinks(q){
+  const e = encodeURIComponent(q || '');
+  return '<a target="_blank" rel="noopener" href="https://www.google.com/search?q=' + e + '">Google</a> · <a target="_blank" rel="noopener" href="https://incidecoder.com/search?query=' + e + '">INCIDecoder</a> · <a target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=' + e + '%20review">Reviews</a>';
+}
+function toggleSave(){ if (!currentRecord) return; patchRecord(currentRecord.id, { saved: !currentRecord.saved }); renderResultSheet(currentRecord, {}); toast(currentRecord.saved ? 'Saved to gallery' : 'Removed from saved'); }
+function openSources(){
+  const w = currentRecord && currentRecord.web;
+  if (!w || !w.sources) return;
+  $('#srcHead').textContent = 'SOURCES · ' + w.sources.length;
+  $('#srcProd').textContent = currentRecord.product.product_name;
+  $('#srcList').innerHTML = w.sources.map(s =>
+    '<a class="srcrow" style="text-decoration:none" target="_blank" rel="noopener" href="' + esc(s.url || '#') + '"><span class="avvy">' + srcAvatar(s.site) + '</span><div class="grow"><b>' + esc(s.site) + '</b><p class="t">' + esc(s.title || '') + '</p><p class="s">' + esc(s.snippet || '') + '</p></div></a>').join('');
+  openSheet('shSources');
+}
+function openBuy(){
+  const rec = currentRecord; if (!rec) return;
+  $('#buyProd').textContent = rec.product.product_name;
+  const w = rec.web;
+  let h = '';
+  if (w && w.sellers && w.sellers.length) {
+    h += '<p class="mono dim" style="margin-top:14px">ONLINE</p>';
+    w.sellers.forEach(s => {
+      h += '<div class="srcrow"><span class="avvy">' + srcAvatar(s.store) + '</span><div class="grow"><b>' + esc(s.store) + '</b><p class="s">' + esc(s.note || '') + '</p></div><b style="font-size:15px">' + esc(s.price || '') + '</b></div>';
+    });
+    const priced = w.sellers.filter(x => x.price);
+    if (priced.length) {
+      const best = priced.reduce((a, b) => (parseFloat(String(b.price).replace(/[^0-9.]/g,'')) || 9e9) < (parseFloat(String(a.price).replace(/[^0-9.]/g,'')) || 9e9) ? b : a);
+      h += '<div class="card row" style="margin-top:14px"><span class="chip lime">BEST PRICE</span><p style="font-size:13.5px">' + esc(best.store) + ' · ' + esc(best.price) + '</p></div>';
+    }
+  } else {
+    h += '<p class="tiny" style="margin-top:14px">' + (w && !w.failed ? 'Still sourcing sellers…' : 'No live seller data — try: ' + quickLinks(rec.product.search_query)) + '</p>';
+  }
+  h += '<p class="tiny" style="margin-top:14px">Search: ' + quickLinks(rec.product.search_query) + '</p>';
+  $('#buyList').innerHTML = h;
+  openSheet('shBuy');
 }
 
-/* ---------- inputs: camera / upload / paste / drop ---------- */
-els.cameraBtn.addEventListener('click', async () => {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    showErrorOnHome('Camera needs a secure (https) page. Use Upload or paste a screenshot instead.');
-    return;
-  }
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
-    els.video.srcObject = stream;
-    els.cameraView.hidden = false;
-  } catch (err) {
-    showErrorOnHome('Camera access was blocked. Use Upload or paste a screenshot instead.');
-  }
-});
-function stopCamera() {
-  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
-  els.cameraView.hidden = true;
+/* ================= SCAN SCREEN UI ================= */
+function refreshScanUI(){
+  $('#scansLeft').textContent = store.premium ? 'UNLIMITED SCANS · PREMIUM' : (scansLeft() + ' FREE SCAN' + (scansLeft() === 1 ? '' : 'S') + ' LEFT TODAY');
 }
-els.closeCameraBtn.addEventListener('click', stopCamera);
-els.captureBtn.addEventListener('click', async () => {
-  const v = els.video;
-  const c = document.createElement('canvas');
-  c.width = v.videoWidth; c.height = v.videoHeight;
-  c.getContext('2d').drawImage(v, 0, 0);
-  const raw = c.toDataURL('image/jpeg', 0.92);
-  stopCamera();
-  analyze(await toJpeg(raw));
-});
-function showErrorOnHome(msg) {
-  els.stage.hidden = false;
-  els.home.hidden = true;
-  els.preview.removeAttribute('src');
-  showError(msg);
-}
+function renderLimit(){ $('#limitCount').textContent = CONFIG.FREE_SCANS_PER_DAY + '/' + CONFIG.FREE_SCANS_PER_DAY; }
 
-els.uploadBtn.addEventListener('click', () => els.fileInput.click());
-els.fileInput.addEventListener('change', async e => {
-  const f = e.target.files[0];
-  if (!f) return;
-  try { analyze(await toJpeg(f)); } catch (err) { showErrorOnHome(err.message); }
+$('#enableCamBtn').addEventListener('click', startCam);
+$('#shutterBtn').addEventListener('click', async () => {
+  if (camStream) beginScan(grabFrame($('#camVideo')));
+  else if (!$('#freezeImg').hidden && pendingImage) beginScan(pendingImage.dataUrl);
+  else startCam();
+});
+$('#uploadBtn').addEventListener('click', () => $('#fileInput').click());
+$('#fileInput').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try { beginScan(await toJpeg(f)); } catch(err) { toast(err.message); }
   e.target.value = '';
 });
-
+$('#pasteHintBtn').addEventListener('click', () => toast('Paste anywhere with Ctrl/Cmd + V'));
 window.addEventListener('paste', async e => {
+  if (!$('#scrScan').classList.contains('on')) return;
   const item = [...(e.clipboardData ? e.clipboardData.items : [])].find(i => i.type.startsWith('image/'));
   if (!item) return;
-  try { analyze(await toJpeg(item.getAsFile())); } catch (err) { showErrorOnHome(err.message); }
+  try { beginScan(await toJpeg(item.getAsFile())); } catch(err) { toast(err.message); }
 });
-
-['dragover', 'dragenter'].forEach(ev => els.dropzone.addEventListener(ev, e => { e.preventDefault(); els.dropzone.classList.add('drag'); }));
-['dragleave', 'drop'].forEach(ev => els.dropzone.addEventListener(ev, e => { e.preventDefault(); els.dropzone.classList.remove('drag'); }));
-els.dropzone.addEventListener('drop', async e => {
+['dragover','dragenter'].forEach(ev => $('#vf').addEventListener(ev, e => e.preventDefault()));
+$('#vf').addEventListener('drop', async e => {
+  e.preventDefault();
   const f = e.dataTransfer.files && e.dataTransfer.files[0];
-  if (!f || !f.type.startsWith('image/')) return;
-  try { analyze(await toJpeg(f)); } catch (err) { showErrorOnHome(err.message); }
+  if (f && f.type.startsWith('image/')) { try { beginScan(await toJpeg(f)); } catch(err) { toast(err.message); } }
+});
+$('#resClose').addEventListener('click', () => { $('#freezeImg').hidden = true; $('#vfMsg').hidden = false; show('Scan'); refreshScanUI(); });
+$('#noMatchRetry').addEventListener('click', () => { $('#freezeImg').hidden = true; $('#vfMsg').hidden = false; show('Scan'); });
+$('#submitProductBtn').addEventListener('click', () => { toast('Submitted — thanks for helping improve LASERSKIN'); $('#freezeImg').hidden = true; $('#vfMsg').hidden = false; show('Scan'); });
+
+/* ================= LIMIT / PAYWALL ================= */
+$('#limitUpgrade').addEventListener('click', () => show('Paywall'));
+$('#limitLater').addEventListener('click', () => { $('#vfMsg').hidden = false; show('Scan'); });
+$('#pwClose').addEventListener('click', () => show('Scan'));
+$('#pwRestore').addEventListener('click', () => toast('Demo — nothing to restore'));
+$('#planYear').addEventListener('click', () => { $('#planYear').classList.add('on'); $('#planMonth').classList.remove('on'); $('#pwCTA').textContent = 'Try 7 days for $0.99'; });
+$('#planMonth').addEventListener('click', () => { $('#planMonth').classList.add('on'); $('#planYear').classList.remove('on'); $('#pwCTA').textContent = 'Start monthly · $4.99'; });
+$('#pwCTA').addEventListener('click', () => { store.premium = true; refreshScanUI(); show('Welcome'); toast('Premium unlocked (demo)'); });
+
+/* ================= PROFILE FLOW ================= */
+const SKIN_TYPES = [['Oily','Shine and visible pores'],['Dry','Tight, flaky or rough patches'],['Combination','Oily T-zone, drier cheeks'],['Normal','Balanced, few concerns'],['Sensitive','Reacts easily, prone to redness']];
+const CONCERNS = ['Acne & breakouts','Redness','Aging & fine lines','Dark spots','Dryness','Uneven texture','Large pores','Dullness','Hyperpigmentation'];
+const AVOIDS = ['Fragrance','Alcohol','Essential oils','Sulfates','Silicones','None'];
+const TONES = [['#F6E4D7','Fair'],['#EFC9A8','Light'],['#DBA97D','Medium'],['#B67B4F','Tan'],['#8A5632','Deep'],['#5B3A26','Rich']];
+
+$('#wlSetup').addEventListener('click', () => show('Face'));
+$('#wlLater').addEventListener('click', () => { show('Scan'); refreshScanUI(); });
+
+async function startFace(){
+  try {
+    faceStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+    $('#faceVideo').srcObject = faceStream;
+    $('#faceVideo').hidden = false; $('#faceMsg').hidden = true; $('#faceFreeze').hidden = true;
+  } catch(e) { toast('Camera blocked — upload a selfie instead'); }
+}
+function stopFace(){ if (faceStream) { faceStream.getTracks().forEach(t => t.stop()); faceStream = null; } const v = $('#faceVideo'); if (v) v.hidden = true; }
+$('#faceEnableBtn').addEventListener('click', startFace);
+$('#faceUploadBtn').addEventListener('click', () => $('#faceFileInput').click());
+$('#faceFileInput').addEventListener('change', async e => { const f = e.target.files[0]; if (f) skinScan(await toJpeg(f, 900)); e.target.value = ''; });
+$('#faceShutter').addEventListener('click', async () => { if (faceStream) skinScan(await toJpeg(grabFrame($('#faceVideo')), 900)); else startFace(); });
+$('#faceManual').addEventListener('click', () => { draftProfile = {}; openTypeStep(false); });
+
+async function skinScan(dataUrl){
+  $('#faceFreeze').src = dataUrl; $('#faceFreeze').hidden = false;
+  $('#faceVideo').hidden = true; $('#faceMsg').hidden = true;
+  $('#faceVf').classList.remove('idle'); $('#faceAnalyzeBox').hidden = false;
+  stopFace();
+  try {
+    const data = await callClaude({ max_tokens: 700, messages: [{ role: 'user', content: [
+      { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: dataUrl.split(',')[1] } },
+      { type: 'text', text: FACE_PROMPT }
+    ]}]});
+    const f = parseModelJSON(textOf(data));
+    $('#faceAnalyzeBox').hidden = true; $('#faceVf').classList.add('idle');
+    if (!f.ok) { toast("Couldn't read a face there — try again or answer manually"); $('#faceMsg').hidden = false; $('#faceFreeze').hidden = true; return; }
+    draftProfile = { detected: f, type: f.skin_type, concerns: (f.concerns || []).filter(c => CONCERNS.includes(c)), avoid: [], tone: f.tone_index || 4, toneLabel: f.tone_label || TONES[(f.tone_index || 4) - 1][1], hydration: f.hydration || 'Medium' };
+    renderFaceDone(f);
+    show('FaceDone');
+  } catch(e) {
+    $('#faceAnalyzeBox').hidden = true; $('#faceVf').classList.add('idle'); $('#faceMsg').hidden = false; $('#faceFreeze').hidden = true;
+    toast(e.message);
+  }
+}
+function renderFaceDone(f){
+  $('#fdMeta').textContent = 'READ ' + (f.markers || 12) + ' SKIN MARKERS · JUST NOW';
+  const tone = TONES[Math.min(6, Math.max(1, f.tone_index || 4)) - 1];
+  $('#fdCards').innerHTML =
+    '<div class="cmpcard"><p class="mono dim">SKIN TYPE</p><p style="font-size:19px;font-weight:500;margin-top:6px">' + esc(f.skin_type) + '</p><span class="chip detected" style="margin-top:8px">' + esc((f.type_confidence || 'medium').toUpperCase()) + ' CONFIDENCE</span></div>' +
+    '<div class="cmpcard"><p class="mono dim">HYDRATION</p><p style="font-size:19px;font-weight:500;margin-top:6px">' + esc(f.hydration || 'Medium') + '</p><div class="mbar" style="margin-top:12px;height:3px;background:var(--iv14);border-radius:100px;overflow:hidden"><i style="display:block;height:100%;background:var(--lime);width:' + ({Low:'28%',Medium:'55%',High:'85%'}[f.hydration] || '55%') + '"></i></div></div>' +
+    '<div class="cmpcard"><p class="mono dim">SKIN TONE</p><p style="font-size:19px;font-weight:500;margin-top:6px">' + esc(tone[1]) + '</p><span style="display:block;width:20px;height:20px;border-radius:50%;background:' + tone[0] + ';margin-top:8px"></span></div>' +
+    '<div class="cmpcard"><p class="mono dim">DETECTED CONCERNS</p><p style="font-size:19px;font-weight:500;margin-top:6px">' + (f.concerns || []).length + ' flagged</p><p class="mono dim" style="margin-top:8px;font-size:9px">' + esc((f.concerns || []).join(' · ') || 'NONE') + '</p></div>';
+}
+$('#fdFinish').addEventListener('click', () => openTypeStep(true));
+$('#fdRetake').addEventListener('click', () => { $('#faceFreeze').hidden = true; $('#faceMsg').hidden = false; show('Face'); });
+$('#fdBack').addEventListener('click', () => show('Face'));
+$$('[data-back]').forEach(b => b.addEventListener('click', () => {
+  const t = b.getAttribute('data-back');
+  show(t === 'face' ? 'Face' : t === 'type' ? 'Type' : 'Concerns');
+}));
+
+function openTypeStep(fromScan){
+  $('#typeEyebrow').textContent = (fromScan ? 'FROM YOUR SCAN · ' : '') + 'STEP 1 OF 3';
+  $('#typeSub').textContent = fromScan ? ('We detected ' + draftProfile.type + ' skin. Confirm it or pick another — you can change this anytime.') : 'Pick the closest match — you can change this anytime.';
+  $('#typeOpts').innerHTML = SKIN_TYPES.map(([t, d]) =>
+    '<button class="optrow' + (draftProfile.type === t ? ' on' : '') + '" data-t="' + t + '"><div class="grow"><b>' + t + '</b><span>' + d + '</span></div>' +
+    (fromScan && draftProfile.detected && draftProfile.detected.skin_type === t ? '<span class="chip detected">DETECTED</span>' : '') + '<span class="radio"></span></button>').join('');
+  $$('#typeOpts .optrow').forEach(b => b.addEventListener('click', () => {
+    draftProfile.type = b.getAttribute('data-t');
+    $$('#typeOpts .optrow').forEach(x => x.classList.toggle('on', x === b));
+  }));
+  show('Type');
+}
+$('#typeNext').addEventListener('click', () => { if (!draftProfile.type) { toast('Pick a skin type'); return; } openConcernsStep(); });
+
+function openConcernsStep(){
+  draftProfile.concerns = draftProfile.concerns || [];
+  $('#conEyebrow').textContent = (draftProfile.detected ? 'FROM YOUR SCAN · ' : '') + 'STEP 2 OF 3';
+  $('#conSub').textContent = draftProfile.detected && draftProfile.concerns.length ? ('From your scan we flagged ' + draftProfile.concerns.map(c => c.toLowerCase()).join(', ') + '. Add or remove anything that doesn\u2019t fit.') : 'Add or remove anything that doesn\u2019t fit.';
+  const paint = () => {
+    $('#conChips').innerHTML = CONCERNS.map(c => '<button class="selchip' + (draftProfile.concerns.includes(c) ? ' on' : '') + '" data-c="' + c + '">' + c + '</button>').join('');
+    $('#conCount').textContent = draftProfile.concerns.length + ' SELECTED';
+    $$('#conChips .selchip').forEach(b => b.addEventListener('click', () => {
+      const c = b.getAttribute('data-c');
+      draftProfile.concerns = draftProfile.concerns.includes(c) ? draftProfile.concerns.filter(x => x !== c) : [...draftProfile.concerns, c];
+      paint();
+    }));
+  };
+  paint();
+  show('Concerns');
+}
+$('#conNext').addEventListener('click', openSensStep);
+
+function openSensStep(){
+  draftProfile.avoid = draftProfile.avoid || [];
+  draftProfile.tone = draftProfile.tone || 4;
+  $('#sensEyebrow').textContent = (draftProfile.detected ? 'FROM YOUR SCAN · ' : '') + 'STEP 3 OF 3';
+  const paint = () => {
+    $('#avoidChips').innerHTML = AVOIDS.map(a => '<button class="selchip' + (draftProfile.avoid.includes(a) ? ' on' : '') + '" data-a="' + a + '">' + a + '</button>').join('');
+    $('#toneRow').innerHTML = TONES.map((t, i) => '<button class="tone' + (draftProfile.tone === i + 1 ? ' on' : '') + '" data-i="' + (i + 1) + '" style="background:' + t[0] + '" aria-label="' + t[1] + '"></button>').join('');
+    $$('#avoidChips .selchip').forEach(b => b.addEventListener('click', () => {
+      const a = b.getAttribute('data-a');
+      if (a === 'None') draftProfile.avoid = draftProfile.avoid.includes('None') ? [] : ['None'];
+      else { draftProfile.avoid = draftProfile.avoid.filter(x => x !== 'None'); draftProfile.avoid = draftProfile.avoid.includes(a) ? draftProfile.avoid.filter(x => x !== a) : [...draftProfile.avoid, a]; }
+      paint();
+    }));
+    $$('#toneRow .tone').forEach(b => b.addEventListener('click', () => { draftProfile.tone = parseInt(b.getAttribute('data-i'), 10); draftProfile.toneLabel = TONES[draftProfile.tone - 1][1]; paint(); }));
+  };
+  paint();
+  show('Sens');
+}
+$('#sensDone').addEventListener('click', () => {
+  const avoid = (draftProfile.avoid || []).filter(a => a !== 'None');
+  store.profile = { type: draftProfile.type, concerns: draftProfile.concerns || [], avoid, tone: draftProfile.tone || 4, toneLabel: draftProfile.toneLabel || TONES[(draftProfile.tone || 4) - 1][1], hydration: draftProfile.hydration || 'Medium' };
+  toast('Profile saved — scans are now matched to you');
+  $('#vfMsg').hidden = false;
+  show('Scan'); refreshScanUI();
 });
 
-/* ---------- reset / retry ---------- */
-function reset() {
-  stopStatus();
-  els.stage.hidden = true;
-  els.errorBox.hidden = true;
-  els.results.innerHTML = '';
-  els.home.hidden = false;
-  lastImage = null;
-  window.scrollTo({ top: 0 });
+/* ================= HISTORY & COMPARE ================= */
+let histFilter = 'all';
+$('#histBtn').addEventListener('click', () => { renderHistory(); show('History'); });
+$('#histBack').addEventListener('click', () => { $('#vfMsg').hidden = false; show('Scan'); refreshScanUI(); });
+$$('#histTabs button').forEach(b => b.addEventListener('click', () => {
+  histFilter = b.getAttribute('data-f');
+  $$('#histTabs button').forEach(x => x.classList.toggle('on', x === b));
+  renderHistory();
+}));
+$('#cmpToggle').addEventListener('click', () => {
+  cmpMode = !cmpMode; cmpPick = [];
+  $('#cmpToggle').textContent = cmpMode ? 'COMPARE (0)' : 'COMPARE';
+  $('#histHint').textContent = cmpMode ? 'TAP TWO SCANS TO COMPARE THEM SIDE BY SIDE' : 'TAP A SCAN TO REOPEN IT';
+  renderHistory();
+});
+function fmtDate(ts){ return 'SCANNED ' + new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase(); }
+function renderHistory(){
+  let recs = store.records;
+  $('#histCount').textContent = recs.length + ' PRODUCT' + (recs.length === 1 ? '' : 'S') + ' SAVED';
+  if (histFilter === 'best') recs = recs.filter(r => (r.product.match_percent || 0) >= 85 || r.product.overall_score >= 8.5);
+  if (histFilter === 'saved') recs = recs.filter(r => r.saved);
+  if (histFilter === 'flagged') recs = recs.filter(r => (r.product.flagged_for_you || []).length || (r.product.key_ingredients || []).some(i => i.level === 'caution'));
+  $('#histList').innerHTML = recs.length ? recs.map(r =>
+    '<button class="hrow' + (cmpPick.includes(r.id) ? ' sel' : '') + '" data-id="' + r.id + '"><img src="' + r.thumb + '" alt=""><div class="grow"><b>' + esc(r.product.product_name) + '</b><span class="mono dim" style="font-size:9px">' + fmtDate(r.ts) + '</span></div><span class="dotline"></span><span class="badge">' + (r.product.match_percent != null ? r.product.match_percent + '%' : Number(r.product.overall_score).toFixed(1)) + '</span></button>').join('')
+    : '<p class="tiny" style="margin-top:26px;text-align:center">No scans yet — everything you scan lands here automatically.</p>';
+  $$('#histList .hrow').forEach(b => b.addEventListener('click', () => {
+    const rec = store.records.find(r => r.id === b.getAttribute('data-id'));
+    if (!rec) return;
+    if (!cmpMode) { openResult(rec, { fromCache: true }); return; }
+    cmpPick = cmpPick.includes(rec.id) ? cmpPick.filter(x => x !== rec.id) : [...cmpPick, rec.id].slice(-2);
+    $('#cmpToggle').textContent = 'COMPARE (' + cmpPick.length + ')';
+    renderHistory();
+    if (cmpPick.length === 2) { renderCompare(); show('Compare'); }
+  }));
 }
-els.resetBtn.addEventListener('click', reset);
-els.startOverBtn.addEventListener('click', reset);
-els.retryBtn.addEventListener('click', () => { lastImage ? analyze(lastImage) : reset(); });
+$('#cmpBack').addEventListener('click', () => { cmpMode = false; cmpPick = []; $('#cmpToggle').textContent = 'COMPARE'; renderHistory(); show('History'); });
+function cmpVal(r, fn, dash){ try { const v = fn(r); return v == null || v === '' ? (dash || '—') : v; } catch(e){ return dash || '—'; } }
+function renderCompare(){
+  const [a, b] = cmpPick.map(id => store.records.find(r => r.id === id));
+  if (!a || !b) return;
+  const pct = r => r.product.match_percent != null ? r.product.match_percent + '%' : Number(r.product.overall_score).toFixed(1);
+  const flags = r => { const f = (r.product.flagged_for_you || []); if (f.length) return f.join(', '); const c = (r.product.key_ingredients || []).filter(i => i.level === 'caution').map(i => i.name); return c.length ? c.join(', ') : 'None'; };
+  const price = r => { const s = ((r.web || {}).sellers || []).filter(x => x.price); return s.length ? s[0].price : null; };
+  const winner = (a.product.match_percent || a.product.overall_score * 10) >= (b.product.match_percent || b.product.overall_score * 10) ? a : b;
+  const loser = winner === a ? b : a;
+  let verdict = esc(winner.product.product_name) + ' is the better match';
+  if (flags(winner) !== 'None' && flags(loser) === 'None') verdict += ' — but ' + esc(loser.product.product_name) + ' is gentler';
+  verdict += '.';
+  $('#cmpBody').innerHTML =
+    '<div class="cmpgrid">' + [a, b].map(r =>
+      '<div class="cmpcard">' + (r === winner ? '<span class="saveflag" style="top:-9px;left:12px;right:auto">BEST MATCH</span>' : '') + '<img src="' + r.thumb + '" alt=""><p style="font-size:13px;font-weight:500;margin-top:9px">' + esc(r.product.product_name) + '</p><p class="pct">' + pct(r) + '</p><p class="mono dim" style="font-size:8.5px">MATCH FOR YOU</p></div>').join('') + '</div>' +
+    '<div class="cmprow" style="margin-top:14px"><span class="lbl">Overall rating</span><span>' + cmpVal(a, r => Number(r.product.overall_score).toFixed(1) + ' / 10') + '</span><span>' + cmpVal(b, r => Number(r.product.overall_score).toFixed(1) + ' / 10') + '</span></div>' +
+    '<div class="cmprow"><span class="lbl">Best for</span><span>' + cmpVal(a, r => r.product.score_chip) + '</span><span>' + cmpVal(b, r => r.product.score_chip) + '</span></div>' +
+    '<div class="cmprow"><span class="lbl">Flagged for you</span><span>' + esc(flags(a)) + '</span><span>' + esc(flags(b)) + '</span></div>' +
+    '<div class="cmprow"><span class="lbl">Price (best found)</span><span>' + cmpVal(a, price) + '</span><span>' + cmpVal(b, price) + '</span></div>' +
+    '<div class="callout" style="background:var(--iv08);margin-top:16px"><span class="bar" style="background:var(--lime)"></span><div><p style="color:var(--ivory)">' + verdict + '</p></div></div>' +
+    '<button class="btn prime" style="margin-top:18px" onclick="addRoutine(\'' + winner.id + '\')">Add ' + esc(winner.product.product_name.split(' ')[0]) + ' to your routine</button>' +
+    '<p style="text-align:center;margin-top:14px"><button class="linkish" style="color:var(--iv60);font-weight:400" onclick="backToPick()">Choose different scans</button></p>';
+}
+function addRoutine(id){ patchRecord(id, { routine: true }); toast('Added to your routine'); }
+function backToPick(){ cmpPick = []; $('#cmpToggle').textContent = 'COMPARE (0)'; renderHistory(); show('History'); }
+
+/* ================= ONBOARDING ================= */
+const ONB = [
+  ['✚','BUILT FOR YOUR SKIN','Scans matched to your skin','Set your skin type and concerns once. Every future scan is then scored for you — what suits you, and what to steer clear of.'],
+  ['◎','WHERE TO BUY','Find it nearby or online','See which shops stock a product and compare trusted online sellers — prices and availability, in seconds.'],
+  ['✦','GO DEEPER','Book a dermatologist','Want a professional opinion? Add an optional expert review of any scan for a one-off fee — no subscription required.'],
+  ['▦','YOUR SHELF','Track and compare scans','Save every scan to your history, then compare two products side by side to decide what earns a place in your routine.']
+];
+let onbI = 0;
+function renderOnb(){
+  $('#onbSlides').innerHTML = '<div class="illo">' + ONB[onbI][0] + '</div>' +
+    '<div class="row" style="margin-top:22px"><p class="mono nude">' + ONB[onbI][1] + '</p><span class="dotline"></span><p class="mono dim">' + (onbI + 1) + ' / 4</p></div>' +
+    '<h2 class="h-big" style="margin-top:10px">' + ONB[onbI][2] + '</h2><p class="sub">' + ONB[onbI][3] + '</p>';
+  $('#onbSteps').innerHTML = ONB.map((_, i) => '<i class="' + (i <= onbI ? 'on' : '') + '"></i>').join('');
+  $('#onbNext').textContent = onbI === 3 ? 'Start scanning' : 'Continue';
+}
+$('#onbNext').addEventListener('click', () => { if (onbI < 3) { onbI++; renderOnb(); } else finishOnb(); });
+$('#onbSkip').addEventListener('click', finishOnb);
+function finishOnb(){ store.onboarded = true; show('Scan'); refreshScanUI(); }
+
+/* ================= SETTINGS ================= */
+$('#setBtn').addEventListener('click', () => { $('#keyInput').value = store.k; $('#proxyInput').value = localStorage.getItem('ls_proxy') || ''; openSheet('shSettings'); });
+$('#saveSettings').addEventListener('click', () => { store.k = $('#keyInput').value.trim(); store.proxy = $('#proxyInput').value.trim(); closeSheets(); toast('Settings saved'); });
+$('#resetDemo').addEventListener('click', () => { ['ls_premium','ls_onboarded','ls_profile','ls_records', todayKey()].forEach(k => localStorage.removeItem(k)); location.reload(); });
+$('#accGotIt').addEventListener('click', closeSheets);
+$('#dermBook').addEventListener('click', () => { closeSheets(); toast('Demo — booking isn\u2019t wired up yet'); });
+
+/* ================= INIT ================= */
+refreshScanUI();
+if (!store.onboarded) { renderOnb(); show('Onboard'); } else { show('Scan'); }
 </script>
 </body>
 </html>
